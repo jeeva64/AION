@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // ✅ Login success
       alert(result.message || "Login successful!");
+      sessionStorage.setItem("leaderId", result.id);
 
       // 🔐 OPTIONAL: store token or user info
       if (result.token) {
