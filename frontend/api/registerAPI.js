@@ -1,7 +1,7 @@
-
+document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("regForm");
+  if (!form) return;
 
-  // 🔧 CHANGE THIS to your real Render backend URL
   const API_BASE = "https://sjcaisymposium.onrender.com";
   const REGISTER_ENDPOINT = `${API_BASE}/regleader`;
 
@@ -21,21 +21,29 @@
       return;
     }
 
-    // Build payload (API-ready)
+    // 🔥 Build payload EXACTLY as backend expects
     const data = {
-      name: document.getElementById("name").value,
-      email: document.getElementById("email").value,
-      mobile: document.getElementById("mobile").value,
-      department: document.getElementById("department").value,
-      college: document.getElementById("college").value,
-      shift: document.getElementById("shift").value,
-      password: password
+      name: document.getElementById("name").value.trim(),
+      email: document.getElementById("email").value.trim(),
+
+      // rename: mobile -> mobilenumber
+      mobilenumber: document.getElementById("mobile").value.trim(),
+
+      // normalize: department -> lowercase (cs, ds, aiml, it, ca)
+      department: document.getElementById("department").value.toLowerCase(),
+
+      college: document.getElementById("college").value.trim(),
+
+      // normalize: shift -> "1" or "2"
+      shift: document.getElementById("shift").value === "AIDED" ? "1" : "2",
+
+      password: password,
+      confirmpassword: confirmPassword
     };
 
     console.log("Form data ready for API:", data);
 
     try {
-      // 🔥 POST request to Render backend
       const res = await fetch(REGISTER_ENDPOINT, {
         method: "POST",
         headers: {
@@ -44,18 +52,19 @@
         body: JSON.stringify(data)
       });
 
-      const result = await res.json();
+      const ct = res.headers.get("content-type") || "";
+      const result = ct.includes("application/json")
+        ? await res.json()
+        : { message: await res.text() };
 
       if (!res.ok) {
-        // Backend returned error status
         throw new Error(result.message || "Registration failed");
       }
 
-      // ✅ Success
       alert(result.message || "Registration successful!");
       form.reset();
 
-      // Optional: redirect to login page
+      // Optional redirect
       // window.location.href = "login.html";
 
     } catch (err) {
@@ -63,4 +72,4 @@
       alert(err.message || "Something went wrong. Please try again.");
     }
   });
-
+});

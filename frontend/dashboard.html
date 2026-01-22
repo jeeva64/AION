@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Event Registration Table</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 min-h-screen p-4">
+
+  <div class="max-w-6xl mx-auto bg-white p-4 sm:p-6 rounded-xl shadow">
+    <h2 class="text-2xl font-bold mb-4 text-center">
+      Event Registration (Team Leader Entry)
+    </h2>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-slate-200 text-sm">
+        <thead class="bg-slate-100">
+          <tr>
+            <th class="border px-2 py-2">#</th>
+            <th class="border px-2 py-2">Name</th>
+            <th class="border px-2 py-2">Roll Number</th>
+            <th class="border px-2 py-2">Degree</th>
+            <th class="border px-2 py-2">Event 1</th>
+            <th class="border px-2 py-2">Event 2</th>
+            <th class="border px-2 py-2">Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="tableBody">
+          <!-- Rows injected by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- External JS -->
+  <script src="api/eventTableAPI.js"></script>
+
+</body>
+</html>
