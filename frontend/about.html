@@ -1,40 +1,219 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Admin Login</title>
+  <title>About Department | AION 2K26</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- External styles -->
+  <link rel="stylesheet" href="CSS/global.css">
+  <link rel="stylesheet" href="CSS/about.css">
 </head>
-<body class="bg-slate-50">
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all px-4 md:px-8 py-3 bg-transparent">
-  <div class="max-w-7xl mx-auto flex items-center justify-between">
+
+<body class="bg-slate-50 text-slate-800">
+
+<!-- NAVBAR -->
+<body class="bg-slate-50 text-slate-900 font-sans">
+
+<!-- NAVBAR -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+
+    <!-- LOGO -->
     <a href="index.html" class="flex items-center gap-2">
-      <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-        <span class="text-white font-bold text-xl">S</span>
-      </div>
-      <span class="font-bold text-xl hidden sm:block">
-        AI‑ON<span class="text-blue-600">2026</span>
+      <!-- <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold">
+        S
+      </div> -->
+      <span class="font-bold text-xl">
+        AION<span class="text-blue-600"> 2K26</span>
       </span>
     </a>
 
-    <div class="hidden md:flex items-center gap-8">
-      <a href="index.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">Home</a>
-      <a href="about.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">About</a>
-      <a href="brochure.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">Brochure</a>
-      <a href="login.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">Login</a>
-      <a href="register.html" class="bg-blue-600 text-white px-5 py-2 rounded-full">Register Now</a>
+    <!-- DESKTOP MENU -->
+    <div class="hidden md:flex gap-6 text-sm font-medium items-center">
+      <a href="index.html" class="nav-link text-blue-600">Home</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="brochure.html" class="nav-link">Brochure</a>
+      <a href="login.html" class="nav-link">Login</a>
+      <a href="register.html" class="btn-primary">Register</a>
     </div>
 
-    <button class="md:hidden" onclick="toggleMenu()">☰</button>
+    <!-- MOBILE TOGGLE -->
+    <button class="md:hidden text-slate-700" onclick="toggleMenu()">☰</button>
   </div>
 
-  <div id="mobileMenu" class="hidden md:hidden bg-white border-t shadow p-4 space-y-3">
-    <a href="index.html" class="block">Home</a>
-    <a href="brochure.html" class="block">Brochure</a>
-    <a href="register.html" class="block">Register</a>
+  <!-- MOBILE MENU -->
+  <div id="mobileMenu" class="hidden md:hidden bg-white border-t shadow px-4 py-4 space-y-3">
+    <a href="index.html" class="block nav-link">Home</a>
+    <a href="about.html" class="block nav-link">About</a>
+    <a href="brochure.html" class="block nav-link">Brochure</a>
+    <a href="login.html" class="block nav-link">Login</a>
+    <a href="register.html" class="block btn-primary text-center">Register</a>
   </div>
 </nav>
 
 
+<main class="pt-24">
+
+<!-- HERO -->
+<section class="relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-indigo-600/10 to-transparent"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 py-24 grid gap-12 md:grid-cols-2 items-center">
+    
+    <!-- LEFT -->
+    <div class="fade-in">
+      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-6">
+        About the <br />
+        <span class="text-blue-600">AI Department</span>
+      </h1>
+      <p class="text-slate-600 text-lg max-w-xl">
+        Building intelligent minds through innovation, ethics, and
+        industry‑driven Artificial Intelligence education.
+      </p>
+    </div>
+
+    <!-- RIGHT (Accent Panel) -->
+    <div class="glass-card fade-in">
+      <h3 class="text-xl font-semibold mb-3">Why AI @ SJC?</h3>
+      <ul class="space-y-2 text-slate-600">
+        <li>✔ Industry‑oriented curriculum</li>
+        <li>✔ Research‑focused learning</li>
+        <li>✔ Competitive symposium culture</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT CONTENT -->
+<section class="max-w-7xl mx-auto px-4 py-20 grid gap-12 md:grid-cols-2 items-start">
   
+  <!-- TEXT -->
+  <div class="fade-in">
+    <h2 class="section-title">Who We Are</h2>
+    <p class="section-text">
+      The Department of Artificial Intelligence was established in 2024,
+      offering B.Sc. (AI & ML) and M.Sc. (Artificial Intelligence).
+    </p>
+    <p class="section-text">
+      Our focus lies in academic excellence, applied research, and
+      industry‑oriented learning through workshops, symposiums, and
+      inter‑college competitions.
+    </p>
+  </div>
+
+  <!-- STATS -->
+  <div class="grid grid-cols-2 gap-6 fade-in">
+    <div class="stat-card">
+      <h4>2024</h4>
+      <p>Established</p>
+    </div>
+    <div class="stat-card">
+      <h4>2+</h4>
+      <p>Degree Programs</p>
+    </div>
+    <div class="stat-card">
+      <h4>10+</h4>
+      <p>Events Conducted</p>
+    </div>
+    <div class="stat-card">
+      <h4>100+</h4>
+      <p>Active Students</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- VISION / MISSION / HIGHLIGHTS -->
+<section class="max-w-7xl mx-auto px-4 py-16 grid gap-8 md:grid-cols-3">
+  <div class="glass-card card-hover fade-in">
+    <h3 class="card-title text-blue-600">🎯 Vision</h3>
+    <p>To produce industry‑ready AI professionals with strong ethics.</p>
+  </div>
+  <div class="glass-card card-hover fade-in">
+    <h3 class="card-title text-green-600">🚀 Mission</h3>
+    <p>Hands‑on learning, research excellence, and industry collaboration.</p>
+  </div>
+  <div class="glass-card card-hover fade-in">
+    <h3 class="card-title text-yellow-600">🏆 Highlights</h3>
+    <ul class="list-disc list-inside space-y-1">
+      <li>Industry‑oriented curriculum</li>
+      <li>Professional Skill Development</li>
+      <li>Active student association</li>
+    </ul>
+  </div>
+</section>
+
+<!-- FACULTY -->
+<section class="max-w-7xl mx-auto px-4 py-24">
+  <div class="mb-12 fade-in">
+    <h2 class="section-title">Our Faculty</h2>
+    <p class="section-text max-w-xl">
+      Experienced mentors guiding students in Artificial Intelligence
+    </p>
+  </div>
+
+  <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+
+    <!-- HOD -->
+    <div class="faculty-card fade-in">
+      <img src="/Images/hod.jpg" alt="Mr. A Charles">
+      <div>
+        <h4>Mr. A Charles</h4>
+        <p class="role">Head of Department</p>
+        <p class="qual">M.Sc., PGDCA, M.Phil.</p>
+      </div>
+    </div>
+
+    <!-- Dr. Mani -->
+    <div class="faculty-card fade-in">
+      <img src="/static/faculty/faculty3.jpg" alt="Dr. Mani">
+      <div>
+        <h4>Dr. Mani</h4>
+        <p class="role">Assistant Professor</p>
+        <p class="qual">Degree will be updated</p>
+      </div>
+    </div>
+
+    <!-- Mr. C. Mohanraja -->
+    <div class="faculty-card fade-in">
+      <img src="/static/faculty/faculty3.jpg" alt="Mr. C. Mohanraja">
+      <div>
+        <h4>Mr. C. Mohanraja</h4>
+        <p class="role">Assistant Professor</p>
+        <p class="qual">Degree will be updated</p>
+      </div>
+    </div>
+
+    <!-- Dr. J. Hirudhaya Mary Asha -->
+    <div class="faculty-card fade-in">
+      <img src="/Images/mam.jpg" alt="Dr. J. Hirudhaya Mary Asha">
+      <div>
+        <h4>Dr. J. Hirudhaya Mary Asha</h4>
+        <p class="role">Assistant Professor</p>
+        <p class="qual">M.Sc., M.Phil., MCA, M.Tech., Ph.D</p>
+      </div>
+    </div>
+
+    <!-- Dr. Jesu Doss -->
+    <div class="faculty-card fade-in">
+      <img src="/Images/jesu_sir.jpg" alt="Dr. Jesu Doss">
+      <div>
+        <h4>Dr. Jesu Doss</h4>
+        <p class="role">Assistant Professor</p>
+        <p class="qual">Degree will be updated</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+</main>
+
 </body>
 </html>

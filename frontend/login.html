@@ -1,33 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Admin Login</title>
+  <title>Login | AION 2K26</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="CSS/global.css">
 </head>
 <body class="bg-slate-50">
 
   <!-- NAVBAR (unchanged) -->
  <!-- NAVBAR -->
-  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all px-4 md:px-8 py-3 bg-white shadow">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <a href="index.html" class="flex items-center gap-2">
-        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-          <span class="text-white font-bold text-xl">S</span>
-        </div>
-        <span class="font-bold text-xl hidden sm:block">
-          AI‑ON<span class="text-blue-600">2026</span>
-        </span>
-      </a>
+  <body class="bg-slate-50 text-slate-900 font-sans">
 
-      <div class="hidden md:flex items-center gap-8">
-        <a href="index.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">Home</a>
-        <a href="about.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">About</a>
-        <a href="brochure.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">Brochure</a>
-        <a href="login.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">Login</a>
-        <a href="register.html" class="bg-blue-600 text-white px-5 py-2 rounded-full">Register Now</a>
-      </div>
+<!-- NAVBAR -->
+<body class="bg-slate-50 text-slate-900 font-sans">
+
+<!-- NAVBAR -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+
+    <!-- LOGO -->
+    <a href="index.html" class="flex items-center gap-2">
+      <!-- <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold">
+        S
+      </div> -->
+      <span class="font-bold text-xl">
+        AION<span class="text-blue-600"> 2K26</span>
+      </span>
+    </a>
+
+    <!-- DESKTOP MENU -->
+    <div class="hidden md:flex gap-6 text-sm font-medium items-center">
+      <a href="index.html" class="nav-link text-blue-600">Home</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="brochure.html" class="nav-link">Brochure</a>
+      <a href="login.html" class="nav-link">Login</a>
+      <a href="register.html" class="btn-primary">Register</a>
     </div>
-  </nav>
+
+    <!-- MOBILE TOGGLE -->
+    <button class="md:hidden text-slate-700" onclick="toggleMenu()">☰</button>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <div id="mobileMenu" class="hidden md:hidden bg-white border-t shadow px-4 py-4 space-y-3">
+    <a href="index.html" class="block nav-link">Home</a>
+    <a href="about.html" class="block nav-link">About</a>
+    <a href="brochure.html" class="block nav-link">Brochure</a>
+    <a href="login.html" class="block nav-link">Login</a>
+    <a href="register.html" class="block btn-primary text-center">Register</a>
+  </div>
+</nav>
+
+
   <div class="max-w-sm mx-auto mt-32 bg-white p-6 rounded-xl shadow">
     <h2 class="text-xl font-bold mb-4">Team Leader Login</h2>
 

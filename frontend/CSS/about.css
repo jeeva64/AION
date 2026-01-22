@@ -1,0 +1,145 @@
+/* NAV LINKS */
+.nav-link {
+  color: #475569;
+  transition: color 0.2s;
+}
+.nav-link:hover {
+  color: #2563eb;
+}
+
+/* BUTTON */
+.btn-primary {
+  background: #2563eb;
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  transition: background 0.2s;
+}
+.btn-primary:hover {
+  background: #1e40af;
+}
+
+/* SECTION */
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.section-text {
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+/* GLASS CARD */
+.glass-card {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* FACULTY */
+.faculty-card {
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.faculty-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.15);
+}
+.faculty-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.faculty-card h4 {
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
+.faculty-card .role {
+  color: #2563eb;
+  font-size: 0.875rem;
+}
+.faculty-card .qual {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* ANIMATIONS */
+.fade-in {
+  animation: fadeIn 0.6s ease-out both;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* STAT CARDS */
+.stat-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+}
+.stat-card h4 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+.stat-card p {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+/* CARD TITLE */
+.card-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* GLASS CARD UPGRADE */
+.glass-card {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(14px);
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+.faculty-card {
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.faculty-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+}
+
+.faculty-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.faculty-card h4 {
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
+
+.faculty-card .role {
+  color: #2563eb;
+  font-size: 0.875rem;
+}
+
+.faculty-card .qual {
+  font-size: 0.8rem;
+  color: #64748b;
+}

@@ -3,72 +3,262 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>AI‑ON 2026</title>
+  <title>Home | AION 2K26</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link
     href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="CSS/global.css">
+  <link rel="stylesheet" href="CSS/events.css">
+
 </head>
 
 <body class="bg-slate-50 text-slate-900 font-sans">
-  <!-- NAVBAR -->
-  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all px-4 md:px-8 py-3 bg-transparent">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <a href="index.html" class="flex items-center gap-2">
-        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-          <span class="text-white font-bold text-xl">S</span>
-        </div>
-        <span class="font-bold text-xl hidden sm:block">
-          AI‑ON<span class="text-blue-600">2026</span>
-        </span>
-      </a>
 
-      <div class="hidden md:flex items-center gap-8">
-        <a href="index.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">Home</a>
-        <a href="about.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">About</a>
-        <a href="brochure.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">Brochure</a>
-        <a href="login.html" class="text-sm font-medium text-gray-600 hover:text-blue-600">Login</a>
-        <a href="register.html" class="bg-blue-600 text-white px-5 py-2 rounded-full">Register Now</a>
+  <body class="bg-slate-50 text-slate-900 font-sans">
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b">
+      <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+
+        <!-- LOGO -->
+        <a href="index.html" class="flex items-center gap-2">
+          <!-- <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold">
+        S
+      </div> -->
+          <span class="font-bold text-xl">
+            AION<span class="text-blue-600"> 2K26</span>
+          </span>
+        </a>
+
+        <!-- DESKTOP MENU -->
+        <div class="hidden md:flex gap-6 text-sm font-medium items-center">
+          <a href="index.html" class="nav-link text-blue-600">Home</a>
+          <a href="about.html" class="nav-link">About</a>
+          <a href="brochure.html" class="nav-link">Brochure</a>
+          <a href="login.html" class="nav-link">Login</a>
+          <a href="register.html" class="btn-primary">Register</a>
+        </div>
+
+        <!-- MOBILE TOGGLE -->
+        <button class="md:hidden text-slate-700" onclick="toggleMenu()">☰</button>
       </div>
 
-      <button class="md:hidden" onclick="toggleMenu()">☰</button>
-    </div>
+      <!-- MOBILE MENU -->
+      <div id="mobileMenu" class="hidden md:hidden bg-white border-t shadow px-4 py-4 space-y-3">
+        <a href="index.html" class="block nav-link">Home</a>
+        <a href="about.html" class="block nav-link">About</a>
+        <a href="brochure.html" class="block nav-link">Brochure</a>
+        <a href="login.html" class="block nav-link">Login</a>
+        <a href="register.html" class="block btn-primary text-center">Register</a>
+      </div>
+    </nav>
 
-    <div id="mobileMenu" class="hidden md:hidden bg-white border-t shadow p-4 space-y-3">
-      <a href="index.html" class="block">Home</a>
-      <a href="brochure.html" class="block">Brochure</a>
-      <a href="register.html" class="block">Register</a>
-    </div>
-  </nav>
 
 
-  <section class="pt-32 pb-32 bg-white text-center">
-    <span class="inline-block bg-blue-50 text-blue-700 px-4 py-2 rounded-full mb-6">
-      ✨ AI‑ON 2026
-    </span>
+    <main>
+      <!-- HERO : COLLEGE + DEPARTMENT HEADER -->
+      <section
+        class="relative overflow-hidden min-h-screen flex items-center bg-slate-950 text-white pt-16 sm:pt-20 lg:pt-24 pb-20">
 
-    <h1 class="text-5xl sm:text-7xl font-bold mb-6">
-      Innovate. Create. <span class="text-blue-600">Dominate.</span>
-    </h1>
 
-    <p class="max-w-2xl mx-auto text-xl text-slate-600 mb-10">
-      Organized by the Department of AI & ML. Join us for a day of technical excellence.
+        <!-- Gradient Background Orbs -->
+        <div class="absolute inset-0 pointer-events-none">
+          <div class="absolute -top-40 left-1/2 -translate-x-1/2
+                w-[420px] h-[420px] sm:w-[520px] sm:h-[520px]
+                bg-blue-600/25 rounded-full blur-[120px]"></div>
+
+          <div class="absolute top-32 left-10
+                w-[300px] h-[300px] sm:w-[420px] sm:h-[420px]
+                bg-cyan-500/20 rounded-full blur-[120px]"></div>
+
+          <div class="absolute top-24 right-10
+                w-[300px] h-[300px] sm:w-[420px] sm:h-[420px]
+                bg-indigo-600/20 rounded-full blur-[120px]"></div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="relative z-10 max-w-7xl mx-auto px-6 text-center w-full">
+
+          <!-- COLLEGE HEADER -->
+          <div class="flex flex-col lg:flex-row items-center justify-center
+                gap-6 lg:gap-8 mb-8 lg:mb-10">
+
+            <img src="assets/college-logo.png" class="w-20 h-20 sm:w-24 sm:h-24 object-contain" alt="College Logo" />
+
+            <div>
+              <h2 class="text-xs sm:text-sm tracking-wide uppercase text-slate-400">
+                Department of Artificial Intelligence & Machine Learning
+              </h2>
+
+              <h1 class="text-xl sm:text-2xl font-bold mt-1">
+                St. Joseph’s College (Autonomous)
+              </h1>
+
+              <p class="text-slate-400 text-xs sm:text-sm">
+                Affiliated to Bharathidasan University · Tiruchirappalli
+              </p>
+            </div>
+
+            <img src="assets/department-logo.png" class="w-20 h-20 sm:w-24 sm:h-24 object-contain"
+              alt="Department Logo" />
+          </div>
+
+          <!-- EVENT BADGE -->
+          <span class="inline-flex items-center rounded-full
+                 bg-blue-500/10 px-2 py-1.5
+                 text-xs sm:text-sm font-medium text-blue-400
+                 ring-1 ring-blue-500/20 mb-4">
+            ✨ Proudly Presents
+          </span>
+
+          <!-- EVENT TITLE -->
+          <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-3">
+            AI‑ON <span class="text-blue-500">2K26</span>
+          </h2>
+
+          <p class="text-base sm:text-lg text-slate-300 mb-5">
+            A State Level Technical Symposium
+          </p>
+
+          <!-- DATE -->
+          <p class="flex justify-center gap-2 text-slate-400 text-sm mb-8">
+            📅 <span class="text-white font-semibold">February 13, 2026</span>
+            <span>|</span>
+            <span>Friday</span>
+          </p>
+
+          <!-- STATS (HEIGHT REDUCED) -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4
+                max-w-3xl mx-auto mb-10">
+
+            <div class="bg-white/5 backdrop-blur rounded-lg
+                  px-5 py-4 border border-white/10">
+              <div class="text-3xl font-bold text-blue-400">8</div>
+              <div class="text-slate-400 text-sm">Events</div>
+            </div>
+
+            <div class="bg-white/5 backdrop-blur rounded-lg
+                  px-5 py-4 border border-white/10">
+              <div class="text-3xl font-bold text-green-400">₹200</div>
+              <div class="text-slate-400 text-sm">Prize Pool</div>
+            </div>
+
+            <div class="bg-white/5 backdrop-blur rounded-lg
+                  px-5 py-4 border border-white/10">
+              <div class="text-3xl font-bold text-yellow-400">1</div>
+              <div class="text-slate-400 text-sm">Day Event</div>
+            </div>
+
+          </div>
+
+          <!-- CTA -->
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="register.html" class="rounded-full bg-blue-600
+                px-7 py-3 text-sm sm:text-base
+                font-semibold shadow-lg shadow-blue-600/30
+                hover:bg-blue-700 transition">
+              Register Now
+            </a>
+
+            <a href="brochure.html" class="rounded-full border border-white/20
+                px-7 py-3 text-sm sm:text-base
+                font-semibold hover:bg-white/10 transition">
+              View Brochure
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-28">
+
+  <!-- TECHNICAL EVENTS -->
+  <div class="text-center mb-16">
+    <span class="event-pill tech-pill">Technical Events</span>
+    <h2 class="text-4xl font-extrabold mt-3">Technical Events</h2>
+    <p class="text-slate-600 mt-3 max-w-xl mx-auto">
+      Challenge your technical expertise and problem‑solving skills
     </p>
+  </div>
 
-    <div class="flex justify-center gap-4">
-      <a href="register.html" class="bg-blue-600 text-white px-8 py-3 rounded-full">Register Now</a>
-      <a href="brochure.html" class="border px-8 py-3 rounded-full">View Brochure</a>
+  <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 mb-24">
+    <div class="event-card tech">
+      <div class="event-badge">01</div>
+      <h3>Debugging</h3>
+      <p>Identify and fix bugs in real‑world problem statements.</p>
     </div>
-  </section>
 
-  <footer class="py-20 bg-slate-900 text-white text-center">
-    <h3 class="text-2xl font-bold mb-4">AI‑ON 2026</h3>
-    <p class="text-slate-400">© 2026 AI‑ON Symposium</p>
-  </footer>
+    <div class="event-card tech">
+      <div class="event-badge">02</div>
+      <h3>AI Prompt Creation</h3>
+      <p>Design effective prompts for AI models and tools.</p>
+    </div>
 
-  <!-- UI JS -->
-  <!-- paste ui.js here -->
-</body>
+    <div class="event-card tech">
+      <div class="event-badge">03</div>
+      <h3>AI Quiz</h3>
+      <p>Test your knowledge in AI, ML, and Data Science.</p>
+    </div>
+
+    <div class="event-card tech">
+      <div class="event-badge">04</div>
+      <h3>Tech‑Connection</h3>
+      <p>Connect technical concepts through logical reasoning.</p>
+    </div>
+  </div>
+
+  <!-- NON TECHNICAL EVENTS -->
+  <div class="text-center mb-16">
+    <span class="event-pill nontech-pill">Non‑Technical Events</span>
+    <h2 class="text-4xl font-extrabold mt-3">Non‑Technical Events</h2>
+    <p class="text-slate-600 mt-3 max-w-xl mx-auto">
+      Creativity, fun, teamwork, and entertainment
+    </p>
+  </div>
+
+  <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="event-card non-tech">
+      <div class="event-badge">05</div>
+      <h3>IPL Auction</h3>
+      <p>Build your dream cricket team in a mock auction.</p>
+    </div>
+
+    <div class="event-card non-tech">
+      <div class="event-badge">06</div>
+      <h3>Adzap</h3>
+      <p>Showcase creativity through innovative advertisements.</p>
+    </div>
+
+    <div class="event-card non-tech">
+      <div class="event-badge">07</div>
+      <h3>Dumb Charades</h3>
+      <p>A classic fun game of acting and guessing.</p>
+    </div>
+
+    <div class="event-card non-tech">
+      <div class="event-badge">08</div>
+      <h3>Treasure Hunt</h3>
+      <p>Solve clues and race to find the hidden treasure.</p>
+    </div>
+  </div>
+
+</section>
+
+
+
+    </main>
+
+    <footer class="py-20 bg-slate-900 text-white text-center">
+      <h3 class="text-2xl font-bold mb-4">AI‑ON 2026</h3>
+      <p class="text-slate-400">© 2026 AI‑ON Symposium</p>
+    </footer>
+
+    <!-- UI JS -->
+    <!-- paste ui.js here -->
+    <script src="ui.js"></script>
+  </body>
 
 </html>

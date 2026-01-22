@@ -1,0 +1,121 @@
+/* =========================
+   SECTION PILL
+========================= */
+.event-pill {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.tech-pill {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+.nontech-pill {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+/* =========================
+   EVENT CARD BASE
+========================= */
+.event-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+  border: 2px solid transparent;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  transition: transform 0.35s ease,
+              box-shadow 0.35s ease,
+              border-color 0.35s ease;
+  overflow: hidden;
+}
+
+/* HOVER */
+.event-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   BADGE
+========================= */
+.event-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.8rem;
+  border-radius: 9999px;
+}
+
+/* =========================
+   TEXT
+========================= */
+.event-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 1.2rem;
+  margin-bottom: 0.6rem;
+}
+
+.event-card p {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.55;
+}
+
+/* =========================
+   TECH / NON‑TECH THEMES
+========================= */
+.event-card.tech {
+  border-color: rgba(37, 99, 235, 0.25);
+}
+.event-card.tech:hover {
+  border-color: #2563eb;
+}
+.event-card.tech::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(37,99,235,0.08), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.event-card.tech:hover::before {
+  opacity: 1;
+}
+
+.event-card.non-tech {
+  border-color: rgba(236, 72, 153, 0.25);
+}
+.event-card.non-tech:hover {
+  border-color: #ec4899;
+}
+.event-card.non-tech::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(236,72,153,0.08), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.event-card.non-tech:hover::before {
+  opacity: 1;
+}
+
+/* =========================
+   MOBILE OPTIMIZATION
+========================= */
+@media (max-width: 640px) {
+  .event-card {
+    padding: 1.6rem 1.2rem;
+  }
+}
