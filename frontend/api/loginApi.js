@@ -2,67 +2,78 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("loginForm");
   if (!form) return;
 
-  // 🔧 CHANGE to your real Render backend URL
-  const API_BASE = "https://sjcaisymposium.onrender.com";
-  const LOGIN_ENDPOINT = `${API_BASE}/loginleader`; 
-  // or `${API_BASE}/regleader/login` or `/api/login` — match backend exactly
+  const API_BASE = "https://sjcaisymposium.onrender.com"; // change to Render URL later
+  const LOGIN_ENDPOINT = `${API_BASE}/loginleader`;
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    if (!form.checkValidity()) {
-      form.reportValidity();
+    const emailEl = document.getElementById("email");
+    const passwordEl = document.getElementById("password");
+
+    const email = emailEl.value.trim();
+    const password = passwordEl.value;
+
+    if (!email || !password) {
+      alert("Please fill all fields!");
       return;
     }
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-
-    const data = {
-      email,
-      password
-    };
-
-    console.log("Login payload:", data);
-
     const submitBtn = form.querySelector('button[type="submit"]');
-    if (submitBtn) submitBtn.disabled = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Please wait...";
+
+    // 🔹 Setup AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+    }, 45000); // 45 seconds max wait
+
+    let wakeMessageShown = false;
 
     try {
+      // 🔔 Show wake-up message after 5 seconds
+      const wakeTimer = setTimeout(() => {
+        wakeMessageShown = true;
+        alert("Server is waking up. This may take some seconds. Please wait...");
+      }, 5000);
+
       const res = await fetch(LOGIN_ENDPOINT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({ email, password }),
+        signal: controller.signal
       });
 
-      const ct = res.headers.get("content-type") || "";
-      const result = ct.includes("application/json")
-        ? await res.json()
-        : { message: await res.text() };
+      clearTimeout(wakeTimer);
+      clearTimeout(timeoutId);
 
-      if (!res.ok) {
-        throw new Error(result.message || "Invalid email or password");
+      const result = await res.json();
+
+      if (!res.ok || result.success !== true) {
+        throw new Error(result.message || "Invalid login credentials");
       }
 
-      // ✅ Login success
-      alert(result.message || "Login successful!");
-      sessionStorage.setItem("leaderId", result.id);
-
-      // 🔐 OPTIONAL: store token or user info
-      if (result.token) {
-        localStorage.setItem("authToken", result.token);
-      }
-
-      // Redirect to admin dashboard
+      alert("Login successful!");
+      sessionStorage.setItem("userid", result.userid);
       window.location.href = "dashboard.html";
 
     } catch (err) {
       console.error("Login error:", err);
-      alert(err.message || "Login failed. Please try again.");
+
+      if (err.name === "AbortError") {
+        alert("Server is taking too long to respond. Please try again.");
+      } else if (!wakeMessageShown) {
+        alert(err.message || "Login failed. Please try again.");
+      } else {
+        alert("Server did not respond in time. Please try again.");
+      }
     } finally {
-      if (submitBtn) submitBtn.disabled = false;
+      clearTimeout(timeoutId);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Login";
     }
   });
 });
