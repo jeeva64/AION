@@ -42,7 +42,7 @@
     </div>
 
     <!-- MOBILE TOGGLE -->
-    <button class="md:hidden text-slate-700" onclick="toggleMenu()">☰</button>
+    <button class="md:hidden text-slate-700" id="menuBtn">☰</button>
   </div>
 
   <!-- MOBILE MENU -->
@@ -214,6 +214,11 @@
 
 
 </main>
+<script>
+  document.getElementById("menuBtn")?.addEventListener("click", () => {
+    document.getElementById("mobileMenu").classList.toggle("hidden");
+  });
+</script>
 
 </body>
 </html>

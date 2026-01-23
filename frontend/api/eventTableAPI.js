@@ -189,6 +189,18 @@ event2.addEventListener("change", () => {
 
       showSuccess("Candidate Added!");
       loadCandidates();
+      /* ✅ RESET ADD FORM */
+      document.getElementById("name").value = "";
+      document.getElementById("registerno").value = "";
+      document.getElementById("degree").value = "";
+
+      // reset event dropdowns properly
+      event1.innerHTML = buildEventOptions();
+      event2.innerHTML = buildEventOptions();
+
+      // optional UX: focus back to first input
+      document.getElementById("name").focus();
+
 
     } catch (err) {
       Swal.close();

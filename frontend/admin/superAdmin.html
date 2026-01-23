@@ -49,7 +49,7 @@
 
 
     <h1 class="text-3xl font-bold text-center mb-4">
-      Team Leader Dashboard
+      Super Admin Dashboard
     </h1>
 
     <!-- 🔵 REGISTERED CANDIDATES TABLE -->
@@ -74,34 +74,9 @@
       </div>
     </div>
 
-    <!-- 🟢 ADD NEW CANDIDATE FORM -->
-    <div class="bg-white rounded-xl shadow p-6">
-      <h2 class="text-xl font-semibold mb-4 text-center">Add New Candidate</h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
-
-        <input id="name" placeholder="Name" class="border rounded px-3 py-2">
-        <input id="registerno" placeholder="Register Number" class="border rounded px-3 py-2">
-
-        <select id="degree" class="border rounded px-3 py-2">
-          <option value="">Select Degree</option>
-          <option value="ug">UG</option>
-          <option value="pg">PG</option>
-        </select>
-
-        <select id="event1" class="border rounded px-3 py-2"></select>
-        <select id="event2" class="border rounded px-3 py-2"></select>
-
-        <button id="submitBtn" class="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700">
-          Submit
-        </button>
-      </div>
-    </div>
-
-  </div>
 
   <!-- External JS -->
-  <script src="api/eventTableAPI.js"></script>
+  <!-- <script src="api/eventTableAPI.js"></script> -->
   <script>
     document.getElementById("menuBtn")?.addEventListener("click", () => {
       document.getElementById("mobileMenu").classList.toggle("hidden");

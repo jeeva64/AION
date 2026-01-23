@@ -12,37 +12,55 @@ document.addEventListener("DOMContentLoaded", () => {
     const passwordEl = document.getElementById("password");
 
     const email = emailEl.value.trim();
-    const password = passwordEl.value;
+    const password = passwordEl.value.trim();
+
+    /* ===================== CLIENT VALIDATION ===================== */
 
     if (!email || !password) {
-      alert("Please fill all fields!");
+      Swal.fire("Required", "Please fill all fields", "warning");
       return;
     }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Swal.fire("Invalid Email", "Please enter a valid email address", "error");
+      emailEl.focus();
+      return;
+    }
+
+    if (password.length < 6) {
+      Swal.fire("Weak Password", "Password must be at least 6 characters", "error");
+      passwordEl.focus();
+      return;
+    }
+
+    /* ===================== UI LOCK ===================== */
 
     const submitBtn = form.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
     submitBtn.textContent = "Please wait...";
 
-    // 🔹 Setup AbortController for timeout
+    /* ===================== TIMEOUT HANDLING ===================== */
+
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => {
-      controller.abort();
-    }, 45000); // 45 seconds max wait
+    const timeoutId = setTimeout(() => controller.abort(), 45000);
 
     let wakeMessageShown = false;
 
     try {
-      // 🔔 Show wake-up message after 5 seconds
       const wakeTimer = setTimeout(() => {
         wakeMessageShown = true;
-        alert("Server is waking up. This may take some seconds. Please wait...");
+        Swal.fire({
+          icon: "info",
+          title: "Server is waking up",
+          text: "Please wait a few seconds...",
+          allowOutsideClick: false
+        });
       }, 5000);
 
       const res = await fetch(LOGIN_ENDPOINT, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
         signal: controller.signal
       });
@@ -56,24 +74,33 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(result.message || "Invalid login credentials");
       }
 
-      alert("Login successful!");
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        timer: 1200,
+        showConfirmButton: false
+      });
+
       sessionStorage.setItem("userid", result.userid);
-      window.location.href = "dashboard.html";
+
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1200);
 
     } catch (err) {
       console.error("Login error:", err);
 
       if (err.name === "AbortError") {
-        alert("Server is taking too long to respond. Please try again.");
-      } else if (!wakeMessageShown) {
-        alert(err.message || "Login failed. Please try again.");
+        Swal.fire("Timeout", "Server is taking too long. Try again.", "error");
       } else {
-        alert("Server did not respond in time. Please try again.");
+        Swal.fire("Login Failed", err.message || "Please try again", "error");
       }
+
     } finally {
       clearTimeout(timeoutId);
       submitBtn.disabled = false;
       submitBtn.textContent = "Login";
     }
   });
+
 });
