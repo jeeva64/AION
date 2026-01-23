@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const registeredBody = document.getElementById("registeredBody");
 
-  const TECH_EVENTS = ["Debugging", "AI Prompt Creation", "AI Quiz", "Tech-Connection"];
-  const NON_TECH_EVENTS = ["IPL Auction", "Adzap", "Dumb Charades", "Treasure Hunt"];
+  const TECH_EVENTS = ["Fixathon", "VisonX", "QRush", "ThinkSync"];
+  const NON_TECH_EVENTS = ["Bid Mayhem", "Crazy Sell", "Mute Masters", "Treasure Titans"];
 
   const event1 = document.getElementById("event1");
   const event2 = document.getElementById("event2");
@@ -49,25 +49,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ===================== EVENT DROPDOWNS ===================== */
 
-  function fillEventOptions(select) {
-    select.innerHTML = `<option value="">Select Event</option>`;
-    TECH_EVENTS.forEach(e => select.innerHTML += `<option value="${e}">${e}</option>`);
-    NON_TECH_EVENTS.forEach(e => select.innerHTML += `<option value="${e}">${e}</option>`);
-  }
+function buildEventOptions(selected = "", disabled = "") {
+  let html = `<option value="">Select Event</option>`;
 
-  fillEventOptions(event1);
-  fillEventOptions(event2);
+  html += `<optgroup label="Technical Events">`;
+  TECH_EVENTS.forEach(e => {
+    html += `
+      <option value="${e}"
+        ${selected === e ? "selected" : ""}
+        ${disabled === e ? "disabled" : ""}>
+        ${e}
+      </option>`;
+  });
+  html += `</optgroup>`;
 
-  function buildEventOptions(selected) {
-    let html = `<option value="">Select</option>`;
-    TECH_EVENTS.forEach(e => {
-      html += `<option value="${e}" ${selected === e ? "selected" : ""}>${e}</option>`;
-    });
-    NON_TECH_EVENTS.forEach(e => {
-      html += `<option value="${e}" ${selected === e ? "selected" : ""}>${e}</option>`;
-    });
-    return html;
-  }
+  html += `<optgroup label="Non‑Technical Events">`;
+  NON_TECH_EVENTS.forEach(e => {
+    html += `
+      <option value="${e}"
+        ${selected === e ? "selected" : ""}
+        ${disabled === e ? "disabled" : ""}>
+        ${e}
+      </option>`;
+  });
+  html += `</optgroup>`;
+
+  return html;
+}
+
+/* INITIAL LOAD (ADD NEW CANDIDATE) */
+event1.innerHTML = buildEventOptions();
+event2.innerHTML = buildEventOptions();
+
+/* PREVENT SAME EVENT (ADD FORM) */
+event1.addEventListener("change", () => {
+  event2.innerHTML = buildEventOptions(event2.value, event1.value);
+});
+
+event2.addEventListener("change", () => {
+  event1.innerHTML = buildEventOptions(event1.value, event2.value);
+});
+
 
   /* ===================== LOAD REGISTERED CANDIDATES ===================== */
 
@@ -114,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <td class="border px-2 py-1 text-center">
             <button class="editBtn bg-slate-300 px-2 py-1 rounded text-xs">Edit</button>
             <button class="submitBtn bg-blue-600 text-white px-2 py-1 rounded text-xs hidden">Submit</button>
+            <button class="cancelBtn bg-red-500 text-white px-2 py-1 rounded text-xs hidden">Cancel</button>
           </td>
         `;
         registeredBody.appendChild(tr);
@@ -182,13 +205,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const editBtn = row.querySelector(".editBtn");
     const submitBtn = row.querySelector(".submitBtn");
+    const cancelBtn = row.querySelector(".cancelBtn");
     const fields = row.querySelectorAll(".edit");
 
-    if (e.target === editBtn) {
-      fields.forEach(f => f.disabled = false);
-      editBtn.classList.add("hidden");
-      submitBtn.classList.remove("hidden");
-    }
+    // Store original values once
+  if (!row.dataset.original) {
+    row.dataset.original = JSON.stringify({
+      name: row.querySelector(".name").value,
+      reg: row.querySelector(".reg").value,
+      degree: row.querySelector(".degree").value,
+      event1: row.querySelector(".event1").value,
+      event2: row.querySelector(".event2").value
+    });
+  }
+
+  if (e.target === editBtn) {
+    fields.forEach(f => f.disabled = false);
+
+    const ev1 = row.querySelector(".event1");
+    const ev2 = row.querySelector(".event2");
+
+    ev1.innerHTML = buildEventOptions(ev1.value, ev2.value);
+    ev2.innerHTML = buildEventOptions(ev2.value, ev1.value);
+
+    ev1.addEventListener("change", () => {
+      ev2.innerHTML = buildEventOptions(ev2.value, ev1.value);
+    });
+
+    ev2.addEventListener("change", () => {
+      ev1.innerHTML = buildEventOptions(ev1.value, ev2.value);
+    });
+
+    
+    editBtn.classList.add("hidden");
+    submitBtn.classList.remove("hidden");
+    cancelBtn.classList.remove("hidden");
+  }
+/* ===================== Cancel button Logic ===================== */
+  if (e.target === cancelBtn) {
+  const original = JSON.parse(row.dataset.original);
+
+  row.querySelector(".name").value = original.name;
+  row.querySelector(".reg").value = original.reg;
+  row.querySelector(".degree").value = original.degree;
+  row.querySelector(".event1").value = original.event1;
+  row.querySelector(".event2").value = original.event2;
+
+  fields.forEach(f => f.disabled = true);
+
+  submitBtn.classList.add("hidden");
+  cancelBtn.classList.add("hidden");
+  editBtn.classList.remove("hidden");
+}
+
+
 
     if (e.target === submitBtn) {
       const data = {
