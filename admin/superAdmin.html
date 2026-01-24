@@ -6,6 +6,7 @@
   <title>Super Admin Dashboard | AION 2K26</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body class="bg-gray-50">
 
@@ -67,6 +68,9 @@
         <button id="searchTeamBtn" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
           Search Team
         </button>
+        <button id="exportTeamBtn" class="hidden px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition ml-2">
+          📊 Export Attendance Sheet
+        </button>
       </div>
 
       <!-- Team Results -->
@@ -105,6 +109,9 @@
         <button id="searchEventBtn" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
           Search Event
         </button>
+        <button id="exportEventBtn" class="hidden px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition ml-2">
+          📊 Export Event Participants
+        </button>
       </div>
 
       <!-- Event Results -->
@@ -115,16 +122,21 @@
 
   <script>
     const API_BASE = "https://sjcaisymposium.onrender.com";
+    let currentTeamData = [];
+    let currentEventData = [];
+    let currentCollege = "";
+    let currentDepartment = "";
+    let currentEventName = "";
 
     // Auth check
     if (!sessionStorage.getItem("adminRole") || sessionStorage.getItem("adminRole") !== "1") {
-      window.location.href = "login.html";
+      window.location.href = "loginAdmin.html";
     }
 
     // Logout
     document.getElementById("logoutBtn").addEventListener("click", () => {
       sessionStorage.clear();
-      window.location.href = "loginAdmin.html";
+      window.location.href = "login.html";
     });
 
     // Tab switching
@@ -176,10 +188,15 @@
         }
 
         displayTeamResults(result.team);
+        currentTeamData = result.team;
+        currentCollege = college;
+        currentDepartment = department;
+        document.getElementById("exportTeamBtn").classList.remove("hidden");
 
       } catch (err) {
         Swal.fire("Error", err.message, "error");
         document.getElementById("teamResults").classList.add("hidden");
+        document.getElementById("exportTeamBtn").classList.add("hidden");
       } finally {
         btn.disabled = false;
         btn.textContent = "Search Team";
@@ -280,10 +297,14 @@
         }
 
         displayEventResults(result.data);
+        currentEventData = result.data;
+        currentEventName = eventName;
+        document.getElementById("exportEventBtn").classList.remove("hidden");
 
       } catch (err) {
         Swal.fire("Error", err.message, "error");
         document.getElementById("eventResults").classList.add("hidden");
+        document.getElementById("exportEventBtn").classList.add("hidden");
       } finally {
         btn.disabled = false;
         btn.textContent = "Search Event";
@@ -342,6 +363,113 @@
 
       container.classList.remove("hidden");
     }
+
+    // ============ EXCEL EXPORT FUNCTIONS ============
+
+    // Export Team Attendance Sheet
+    document.getElementById("exportTeamBtn").addEventListener("click", () => {
+      if (currentTeamData.length === 0) {
+        Swal.fire("No Data", "No team data to export", "warning");
+        return;
+      }
+
+      // Prepare data for Excel
+      const excelData = currentTeamData.map((member, index) => ({
+        "Register ID": index + 1,
+        "Name": member.name || "",
+        "Register Number": member.registerNumber || "",
+        "Degree": member.degree || "",
+        "Event 1": member.event1 || "",
+        "Event 2": member.event2 || "",
+        "Signature": ""
+      }));
+
+      // Create workbook
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(excelData);
+
+      // Add header rows for College and Department
+      XLSX.utils.sheet_add_aoa(ws, [
+        [`College: ${currentCollege}`],
+        [`Department: ${currentDepartment}`],
+        []
+      ], { origin: "A1" });
+
+      // Move data down to accommodate header
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      range.e.r += 3;
+      ws['!ref'] = XLSX.utils.encode_range(range);
+
+      // Adjust column widths
+      ws['!cols'] = [
+        { wch: 12 },  // Register ID
+        { wch: 25 },  // Name
+        { wch: 18 },  // Register Number
+        { wch: 15 },  // Degree
+        { wch: 20 },  // Event 1
+        { wch: 20 },  // Event 2
+        { wch: 20 }   // Signature
+      ];
+
+      XLSX.utils.book_append_sheet(wb, ws, "Attendance");
+
+      // Generate filename
+      const fileName = `${currentCollege}_${currentDepartment}_Attendance_${new Date().toISOString().split('T')[0]}.xlsx`;
+      
+      // Download
+      XLSX.writeFile(wb, fileName);
+      
+      Swal.fire("Success", "Attendance sheet exported!", "success");
+    });
+
+    // Export Event Participants Sheet
+    document.getElementById("exportEventBtn").addEventListener("click", () => {
+      if (currentEventData.length === 0) {
+        Swal.fire("No Data", "No event data to export", "warning");
+        return;
+      }
+
+      // Flatten event data - extract all members from all teams
+      const excelData = [];
+      
+      currentEventData.forEach(team => {
+        team.members.forEach(member => {
+          // Only add if this member is registered for the current event
+          if (member.event1 === currentEventName || member.event2 === currentEventName) {
+            excelData.push({
+              "Name": member.name || "",
+              "Register Number": member.registerNumber || "",
+              "College Name": team.college || "",
+              "Department": team.department || "",
+              "Event Name": currentEventName
+            });
+          }
+        });
+      });
+
+      // Create workbook
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(excelData);
+
+      // Adjust column widths
+      ws['!cols'] = [
+        { wch: 25 },  // Name
+        { wch: 18 },  // Register Number
+        { wch: 30 },  // College Name
+        { wch: 25 },  // Department
+        { wch: 20 }   // Event Name
+      ];
+
+      XLSX.utils.book_append_sheet(wb, ws, "Event Participants");
+
+      // Generate filename
+      const fileName = `${currentEventName}_Participants_${new Date().toISOString().split('T')[0]}.xlsx`;
+      
+      // Download
+      XLSX.writeFile(wb, fileName);
+      
+      Swal.fire("Success", "Event participants list exported!", "success");
+    });
   </script>
 
 </body>
