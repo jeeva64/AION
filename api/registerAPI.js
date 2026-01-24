@@ -1,10 +1,77 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const form = document.getElementById("regForm");
   if (!form) return;
 
   const API_BASE = "https://sjcaisymposium.onrender.com";
   const REGISTER_ENDPOINT = `${API_BASE}/regleader`;
 
+  // ============ LOAD COLLEGES DYNAMICALLY ============
+  await loadColleges();
+
+  async function loadColleges() {
+    const collegeSelect = document.getElementById("college");
+    
+    if (!collegeSelect) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/getcollege`);
+      
+      if (!res.ok) {
+        throw new Error("Failed to load colleges");
+      }
+
+      const colleges = await res.json();
+      
+      // Clear loading option
+      collegeSelect.innerHTML = '<option value="">Select College</option>';
+      
+      // Add colleges from API
+      colleges.forEach(college => {
+        const option = document.createElement("option");
+        option.value = college.name;
+        option.textContent = college.name;
+        option.setAttribute("data-college-id", college.collegeId);
+        collegeSelect.appendChild(option);
+      });
+      
+      // Add "Other" option at the end
+      const otherOption = document.createElement("option");
+      otherOption.value = "Other";
+      otherOption.textContent = "Other";
+      collegeSelect.appendChild(otherOption);
+      
+    } catch (error) {
+      console.error("Error loading colleges:", error);
+      
+      // Fallback to hardcoded list if API fails
+      collegeSelect.innerHTML = `
+        <option value="">Select College</option>
+        <option>St. Joseph's College, Trichy</option>
+        <option>Bishop Heber College, Trichy</option>
+        <option>National College, Trichy</option>
+        <option>Jamal Mohamed College, Trichy</option>
+        <option>CARE College of Engineering, Trichy</option>
+        <option>K. Ramakrishnan College of Technology, Trichy</option>
+        <option>M.A.M. College of Engineering, Trichy</option>
+        <option>Oxford Engineering College, Trichy</option>
+        <option>Government College of Engineering, Trichy</option>
+        <option>Other</option>
+      `;
+      
+      // Optional: Show warning (only if SweetAlert2 is loaded)
+      if (typeof Swal !== 'undefined') {
+        Swal.fire({
+          icon: "warning",
+          title: "Could not load colleges",
+          text: "Using default college list",
+          timer: 3000,
+          showConfirmButton: false
+        });
+      }
+    }
+  }
+
+  // ============ FORM SUBMISSION ============
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -21,18 +88,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = passwordEl.value.trim();
     const confirmPassword = confirmPasswordEl.value.trim();
 
+    // Validation: Password match
     if (password !== confirmPassword) {
       Swal.fire("Error", "Passwords do not match!", "error");
       return;
     }
 
+    // Validation: Terms checkbox
     if (!termsEl.checked) {
       Swal.fire("Required", "You must accept the terms and conditions.", "warning");
       return;
     }
 
+    // Department normalization
     let dept = departmentEl.value.toLowerCase();
     if (dept === "aiml") dept = "ai";
+
+    // Get college ID (optional - if you need it for backend)
+    const selectedCollegeOption = collegeEl.options[collegeEl.selectedIndex];
+    const collegeId = selectedCollegeOption.getAttribute("data-college-id") || null;
 
     const formData = {
       name: nameEl.value.trim(),
@@ -40,12 +114,13 @@ document.addEventListener("DOMContentLoaded", () => {
       mobilenumber: mobileEl.value.trim(),
       department: dept,
       college: collegeEl.value.trim(),
+      // collegeId: collegeId, // Uncomment if backend needs collegeId
       shift: shiftEl.value,
       password: password,
       confirmpassword: confirmPassword
     };
 
-    // ⏳ SweetAlert Loading
+    // Show loading alert
     Swal.fire({
       title: "Registering...",
       text: "Please wait while we process your registration",
@@ -72,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(result.message || "Registration failed");
       }
 
-      // ✅ Success Alert
+      // Success alert
       await Swal.fire({
         icon: "success",
         title: "Registration Successful!",
@@ -85,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (err) {
       console.error("Registration error:", err);
-
+      
       if (err.name === "AbortError") {
         Swal.fire("Timeout", "Server is taking too long. Please try again.", "error");
       } else {
