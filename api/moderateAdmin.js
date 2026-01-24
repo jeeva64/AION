@@ -50,6 +50,7 @@ document.getElementById("searchTeamBtn").addEventListener("click", async () => {
     const btn = document.getElementById("searchTeamBtn");
     btn.disabled = true;
     btn.textContent = "Searching...";
+    document.getElementById("eventName").selectedIndex = 0;
 
     try {
         const res = await fetch(`${API_BASE}/admin/viewteam`, {
@@ -77,6 +78,7 @@ document.getElementById("searchTeamBtn").addEventListener("click", async () => {
     } finally {
         btn.disabled = false;
         btn.textContent = "Search Team";
+        document.getElementById("teamDepartment").selectedIndex = 0;
     }
 });
 
@@ -145,6 +147,7 @@ document.getElementById("searchEventBtn").addEventListener("click", async () => 
     } finally {
         btn.disabled = false;
         btn.textContent = "Search Event";
+        document.getElementById("eventName").selectedIndex = 0;
     }
 });
 

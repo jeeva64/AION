@@ -13,26 +13,33 @@ if (!sessionStorage.getItem("adminRole") || sessionStorage.getItem("adminRole") 
 // Logout
 document.getElementById("logoutBtn").addEventListener("click", () => {
     sessionStorage.clear();
-    window.location.href = "login.html";
+    window.location.href = "loginAdmin.html";
 });
 
-// Tab switching
+// ============ TAB SWITCHING (FIXED - Now handles all 3 tabs) ============
 const tabs = document.querySelectorAll(".tab-btn");
 tabs.forEach(tab => {
     tab.addEventListener("click", () => {
+        // Remove active state from all tabs
         tabs.forEach(t => {
             t.classList.remove("active", "border-blue-600", "text-blue-600");
             t.classList.add("border-transparent", "text-gray-500");
         });
+        
+        // Add active state to clicked tab
         tab.classList.add("active", "border-blue-600", "text-blue-600");
         tab.classList.remove("border-transparent", "text-gray-500");
 
+        // Hide all content sections
         document.querySelectorAll(".tab-content").forEach(content => content.classList.add("hidden"));
 
+        // Show the correct section based on tab clicked
         if (tab.id === "tabViewTeam") {
             document.getElementById("viewTeamSection").classList.remove("hidden");
-        } else {
+        } else if (tab.id === "tabViewEvent") {
             document.getElementById("viewEventSection").classList.remove("hidden");
+        } else if (tab.id === "tabManageColleges") {
+            document.getElementById("manageCollegesSection").classList.remove("hidden");
         }
     });
 });
@@ -77,6 +84,8 @@ document.getElementById("searchTeamBtn").addEventListener("click", async () => {
     } finally {
         btn.disabled = false;
         btn.textContent = "Search Team";
+        document.getElementById("teamCollege").selectedIndex = 0;
+        document.getElementById("teamDepartment").selectedIndex = 0;
     }
 });
 
@@ -185,6 +194,7 @@ document.getElementById("searchEventBtn").addEventListener("click", async () => 
     } finally {
         btn.disabled = false;
         btn.textContent = "Search Event";
+        document.getElementById("eventName").selectedIndex = 0;
     }
 });
 
@@ -347,3 +357,6 @@ document.getElementById("exportEventBtn").addEventListener("click", () => {
 
     Swal.fire("Success", "Event participants list exported!", "success");
 });
+
+// Make deleteMember globally accessible
+window.deleteMember = deleteMember;

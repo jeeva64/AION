@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moderator Dashboard | AION 2K26</title>
+  <title>Organizer | AION 2K26</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -19,7 +19,7 @@
             A
           </div>
           <div>
-            <h1 class="text-xl font-bold text-gray-900">Moderator Dashboard</h1>
+            <h1 class="text-xl font-bold text-gray-900">Organizer Dashboard</h1>
             <p class="text-xs text-gray-500">AION 2K26</p>
           </div>
         </div>
@@ -55,15 +55,29 @@
         <h2 class="text-lg font-semibold text-gray-900 mb-4">View Team by College & Department</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">College Name</label>
-            <input id="teamCollege" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="e.g., SJCET Palai">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
-            <input id="teamDepartment" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="e.g., Computer Science">
-          </div>
-        </div>
+      <!-- College Dropdown (Changed from Input) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">College Name</label>
+        <select id="teamCollege" required
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+          <option value="">Loading colleges...</option>
+        </select>
+      </div>
+      
+      <!-- Department Dropdown -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
+        <select id="teamDepartment" required
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+          <option value="">Select Department</option>
+          <option value="cs">Computer Science</option>
+          <option value="ds">Data Science</option>
+          <option value="ai">AI & ML</option>
+          <option value="it">Information Technology</option>
+          <option value="ca">Computer Applications</option>
+        </select>
+      </div>
+    </div>
         
         <button id="searchTeamBtn" class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition">
           Search Team
@@ -81,7 +95,7 @@
             <thead class="bg-gray-50 border-b">
               <tr>
                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Register No</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Register Number</th>
                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Degree</th>
                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Event 1</th>
                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Event 2</th>
@@ -102,7 +116,25 @@
         
         <div class="max-w-md mb-4">
           <label class="block text-sm font-medium text-gray-700 mb-2">Event Name</label>
-          <input id="eventName" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="e.g., Hackathon">
+          <select id="eventName"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+
+            <option value="" disabled selected>Select Event</option>
+
+            <optgroup label="Technical Events">
+              <option value="Fixathon">Fixathon</option>
+              <option value="VisonX">VisonX</option>
+              <option value="QRush">QRush</option>
+              <option value="ThinkSync">ThinkSync</option>
+            </optgroup>
+
+            <optgroup label="Non-Technical Events">
+              <option value="Bid Mayhem">Bid Mayhem</option>
+              <option value="Crazy Sell">Crazy Sell</option>
+              <option value="Mute Masters">Mute Masters</option>
+              <option value="Treasure Titans">Treasure Titans</option>
+            </optgroup>
+          </select>
         </div>
         
         <button id="searchEventBtn" class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition">
@@ -120,6 +152,7 @@
   </div>
 
   <script src="/api/moderateAdmin.js"></script>
+  <script src="/api/loadCollege.js"></script>
 
 </body>
 </html>
