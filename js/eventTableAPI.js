@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const API_BASE = "https://sjcaisymposium.onrender.com";
   const GET_ENDPOINT = `${API_BASE}/getcandidates`;
-  const PUT_ENDPOINT = `${API_BASE}/studreg`;
+  const POST_ENDPOINT = `${API_BASE}/studreg`; // 🔥 CHANGED FROM PUT TO POST
 
   const registeredBody = document.getElementById("registeredBody");
   const eventSelect = document.getElementById("eventSelect");
@@ -20,21 +20,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // EVENT CONFIGURATION WITH SLOTS AND PARTICIPANT COUNTS
   const EVENT_CONFIG = {
-    "Fixathon": { slot: 1, participants: 2, time: "11:00 AM - 1:00 PM" },
+    "Fixathon": { slot: "1", participants: 2, time: "11:00 AM - 1:00 PM" },
     "Bid Mayhem": { slot: "BOTH", participants: 2, time: "11:00 AM - 4:00 PM (Prelims & Mains)" },
-    "Mute Masters": { slot: 1, participants: 2, time: "11:00 AM - 1:00 PM" },
-    "Treasure Titans": { slot: 1, participants: 2, time: "11:00 AM - 1:00 PM" },
-    "QRush": { slot: 2, participants: 2, time: "2:00 PM - 4:00 PM" },
-    "VisionX": { slot: 2, participants: 1, time: "2:00 PM - 4:00 PM" },
-    "ThinkSync": { slot: 2, participants: 2, time: "2:00 PM - 4:00 PM" },
-    "Crazy Sell": { slot: 2, participants: 4, time: "2:00 PM - 4:00 PM" }
+    "Mute Masters": { slot: "1", participants: 2, time: "11:00 AM - 1:00 PM" },
+    "Treasure Titans": { slot: "1", participants: 2, time: "11:00 AM - 1:00 PM" },
+    "QRush": { slot: "2", participants: 2, time: "2:00 PM - 4:00 PM" },
+    "VisionX": { slot: "2", participants: 1, time: "2:00 PM - 4:00 PM" },
+    "ThinkSync": { slot: "2", participants: 2, time: "2:00 PM - 4:00 PM" },
+    "Crazy Sell": { slot: "2", participants: 4, time: "2:00 PM - 4:00 PM" }
   };
 
   const SLOT_1_EVENTS = ["Fixathon", "Bid Mayhem", "Mute Masters", "Treasure Titans"];
   const SLOT_2_EVENTS = ["QRush", "VisionX", "ThinkSync", "Crazy Sell"];
 
-  // Store registered events per leader
-  let registeredEvents = [];
+  // Store participant registration data (registerNumber -> events mapping)
+  let participantRegistrations = {};
 
   /* ===================== SWEET ALERT HELPERS ===================== */
 
@@ -71,8 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     html += `<optgroup label="Slot 1 (11:00 AM - 1:00 PM)">`;
     SLOT_1_EVENTS.forEach(event => {
       const config = EVENT_CONFIG[event];
-      const isDisabled = registeredEvents.includes(event);
-      html += `<option value="${event}" ${isDisabled ? "disabled" : ""}>
+      html += `<option value="${event}">
         ${event} (${config.participants} ${config.participants === 1 ? 'participant' : 'participants'})
       </option>`;
     });
@@ -81,8 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     html += `<optgroup label="Slot 2 (2:00 PM - 4:00 PM)">`;
     SLOT_2_EVENTS.forEach(event => {
       const config = EVENT_CONFIG[event];
-      const isDisabled = registeredEvents.includes(event);
-      html += `<option value="${event}" ${isDisabled ? "disabled" : ""}>
+      html += `<option value="${event}">
         ${event} (${config.participants} ${config.participants === 1 ? 'participant' : 'participants'})
       </option>`;
     });
@@ -91,44 +89,62 @@ document.addEventListener("DOMContentLoaded", () => {
     eventSelect.innerHTML = html;
   }
 
-  /* ===================== CHECK SLOT CONFLICTS ===================== */
+  /* ===================== CHECK PARTICIPANT CONFLICTS ===================== */
 
-  function checkSlotConflict(selectedEvent) {
-    const selectedConfig = EVENT_CONFIG[selectedEvent];
-    
-    // Special case: Bid Mayhem blocks both slots
-    if (selectedEvent === "Bid Mayhem") {
-      const hasAnyEvent = registeredEvents.length > 0;
-      if (hasAnyEvent) {
-        conflictMessage.textContent = "Bid Mayhem participants cannot register for any other events (it runs in both slots: Prelims at 11 AM-1 PM, Mains at 2 PM-4 PM).";
-        conflictWarning.style.display = "block";
-        return true;
-      }
+  function checkParticipantConflicts(registerNumber, selectedEvent) {
+    if (!registerNumber || !participantRegistrations[registerNumber]) {
+      return { hasConflict: false, message: "" };
     }
 
-    // Check if already registered for Bid Mayhem
-    if (registeredEvents.includes("Bid Mayhem")) {
-      conflictMessage.textContent = "You have already registered for Bid Mayhem, which blocks all other events.";
-      conflictWarning.style.display = "block";
-      return true;
+    const existingEvents = participantRegistrations[registerNumber];
+    const selectedSlot = EVENT_CONFIG[selectedEvent].slot;
+
+    // Check if participant is in Bid Mayhem
+    if (existingEvents.some(e => e.event === "Bid Mayhem")) {
+      return {
+        hasConflict: true,
+        message: `This participant is already registered for Bid Mayhem and cannot register for other events.`
+      };
     }
 
-    // Check slot conflicts
-    const selectedSlot = selectedConfig.slot;
-    const conflictingEvents = registeredEvents.filter(event => {
-      const config = EVENT_CONFIG[event];
-      return config.slot === selectedSlot || config.slot === "BOTH" || selectedSlot === "BOTH";
+    // Check if trying to register Bid Mayhem after other events
+    if (selectedEvent === "Bid Mayhem" && existingEvents.length > 0) {
+      return {
+        hasConflict: true,
+        message: `This participant is already registered for ${existingEvents.map(e => e.event).join(", ")}. Bid Mayhem cannot be registered with other events.`
+      };
+    }
+
+    // Check max 2 events rule
+    if (existingEvents.length >= 2) {
+      return {
+        hasConflict: true,
+        message: `This participant has already registered for 2 events: ${existingEvents.map(e => e.event).join(", ")}. Maximum limit reached.`
+      };
+    }
+
+    // Check slot conflict
+    const slotConflict = existingEvents.find(e => {
+      const existingSlot = EVENT_CONFIG[e.event].slot;
+      return existingSlot === selectedSlot || existingSlot === "BOTH" || selectedSlot === "BOTH";
     });
 
-    if (conflictingEvents.length > 0) {
-      const slotName = selectedSlot === 1 ? "Slot 1 (11 AM-1 PM)" : "Slot 2 (2 PM-4 PM)";
-      conflictMessage.textContent = `Time conflict! You're already registered for ${conflictingEvents.join(", ")} in ${slotName}.`;
-      conflictWarning.style.display = "block";
-      return true;
+    if (slotConflict) {
+      return {
+        hasConflict: true,
+        message: `Time slot conflict! This participant is already registered for ${slotConflict.event}.`
+      };
     }
 
-    conflictWarning.style.display = "none";
-    return false;
+    // Check duplicate event
+    if (existingEvents.some(e => e.event === selectedEvent)) {
+      return {
+        hasConflict: true,
+        message: `This participant is already registered for ${selectedEvent}.`
+      };
+    }
+
+    return { hasConflict: false, message: "" };
   }
 
   /* ===================== GENERATE PARTICIPANT INPUTS ===================== */
@@ -172,7 +188,9 @@ document.addEventListener("DOMContentLoaded", () => {
             id="participant_reg_${i}" 
             placeholder="e.g., 21MSC001"
             class="participant-input w-full border-2 border-slate-300 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+            data-participant-index="${i}"
           />
+          <div id="conflict_warning_${i}" class="text-xs text-red-600 font-semibold mt-1 hidden"></div>
         </div>
       `;
     }
@@ -183,6 +201,28 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     participantInputs.innerHTML = html;
+
+    // Add real-time conflict checking on register number input
+    const selectedEvent = eventSelect.value;
+    for (let i = 1; i <= count; i++) {
+      const regInput = document.getElementById(`participant_reg_${i}`);
+      const warningDiv = document.getElementById(`conflict_warning_${i}`);
+      
+      regInput?.addEventListener('blur', () => {
+        const regNumber = regInput.value.trim().toUpperCase();
+        if (regNumber && selectedEvent) {
+          const conflict = checkParticipantConflicts(regNumber, selectedEvent);
+          if (conflict.hasConflict) {
+            warningDiv.textContent = `⚠️ ${conflict.message}`;
+            warningDiv.classList.remove('hidden');
+            regInput.classList.add('border-red-500');
+          } else {
+            warningDiv.classList.add('hidden');
+            regInput.classList.remove('border-red-500');
+          }
+        }
+      });
+    }
   }
 
   /* ===================== EVENT SELECTION HANDLER ===================== */
@@ -196,18 +236,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Check for conflicts
-    const hasConflict = checkSlotConflict(selectedEvent);
-    
-    // Generate participant inputs regardless (user might want to see the form)
+    // Generate participant inputs
     generateParticipantInputs(selectedEvent);
+    conflictWarning.style.display = "none";
   });
 
   /* ===================== LOAD REGISTERED TEAMS ===================== */
 
   async function loadCandidates() {
     registeredBody.innerHTML = "";
-    registeredEvents = [];
+    participantRegistrations = {};
 
     try {
       const res = await fetch(GET_ENDPOINT, {
@@ -217,6 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const result = await res.json();
+      
       if (!result.success || !result.data || result.data.length === 0) {
         registeredBody.innerHTML = `
           <tr>
@@ -229,48 +268,52 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Group by event (since we now register teams per event with multiple participants)
+      // Build participant registrations map
+      result.data.forEach(candidate => {
+        const regNumber = candidate.registerNumber?.toUpperCase();
+        if (!regNumber) return;
+
+        if (!participantRegistrations[regNumber]) {
+          participantRegistrations[regNumber] = [];
+        }
+
+        // Add event (new schema uses 'event' field, not 'event1')
+        if (candidate.event) {
+          participantRegistrations[regNumber].push({
+            event: candidate.event,
+            degree: candidate.degree,
+            slot: candidate.slot
+          });
+        }
+      });
+
+      // Group by event for display
       const teamsByEvent = {};
       
       result.data.forEach(candidate => {
-        const event1 = candidate.event1;
-        const event2 = candidate.event2;
+        const event = candidate.event;
         
-        // Track registered events for conflict detection
-        if (event1 && !registeredEvents.includes(event1)) {
-          registeredEvents.push(event1);
-        }
-        if (event2 && !registeredEvents.includes(event2)) {
-          registeredEvents.push(event2);
-        }
-
-        // Group participants by their events
-        if (event1) {
-          if (!teamsByEvent[event1]) {
-            teamsByEvent[event1] = {
-              event: event1,
+        if (event) {
+          if (!teamsByEvent[event]) {
+            teamsByEvent[event] = {
+              event: event,
               degree: candidate.degree,
+              slot: candidate.slot,
               participants: []
             };
           }
-          teamsByEvent[event1].participants.push({
-            name: candidate.name,
-            registerNumber: candidate.registerNumber
-          });
-        }
-
-        if (event2) {
-          if (!teamsByEvent[event2]) {
-            teamsByEvent[event2] = {
-              event: event2,
-              degree: candidate.degree,
-              participants: []
-            };
+          
+          // Avoid duplicate participants in same event
+          const exists = teamsByEvent[event].participants.some(
+            p => p.registerNumber === candidate.registerNumber
+          );
+          
+          if (!exists) {
+            teamsByEvent[event].participants.push({
+              name: candidate.name,
+              registerNumber: candidate.registerNumber
+            });
           }
-          teamsByEvent[event2].participants.push({
-            name: candidate.name,
-            registerNumber: candidate.registerNumber
-          });
         }
       });
 
@@ -278,9 +321,11 @@ document.addEventListener("DOMContentLoaded", () => {
       let index = 1;
       Object.values(teamsByEvent).forEach(team => {
         const config = EVENT_CONFIG[team.event];
-        const slotBadge = config.slot === 1 
+        if (!config) return;
+
+        const slotBadge = team.slot === "1" 
           ? '<span class="slot-badge slot-1">Slot 1</span>'
-          : config.slot === 2
+          : team.slot === "2"
           ? '<span class="slot-badge slot-2">Slot 2</span>'
           : '<span class="slot-badge" style="background: linear-gradient(135deg, #667eea 0%, #f5576c 100%);">Both Slots</span>';
 
@@ -300,11 +345,8 @@ document.addEventListener("DOMContentLoaded", () => {
           <td class="border border-slate-200 px-3 py-3 uppercase">${team.degree}</td>
           <td class="border border-slate-200 px-3 py-3">${participantsList}</td>
           <td class="border border-slate-200 px-3 py-3 text-center">
-            <button class="editBtn action-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition-all" data-event="${team.event}">
-              Edit
-            </button>
-            <button class="deleteBtn action-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs ml-2 transition-all" data-event="${team.event}">
-              Delete
+            <button class="deleteBtn action-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition-all" data-event="${team.event}">
+              Delete Team
             </button>
           </td>
         `;
@@ -314,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
       populateEventDropdown();
 
     } catch (err) {
-      console.error(err);
+      console.error("Load candidates error:", err);
       showError("Failed to load teams");
       populateEventDropdown();
     }
@@ -333,105 +375,190 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Check for slot conflicts
-    if (checkSlotConflict(event)) {
-      showError("Cannot register due to time slot conflict!");
-      return;
-    }
-
     const config = EVENT_CONFIG[event];
     const participantCount = config.participants;
     
-    // Collect participant data
+    // Collect and validate participant data
     const participants = [];
+    let hasConflict = false;
+    let conflictMessages = [];
+
     for (let i = 1; i <= participantCount; i++) {
       const name = document.getElementById(`participant_name_${i}`)?.value.trim();
-      const registerNumber = document.getElementById(`participant_reg_${i}`)?.value.trim();
+      const registerNumber = document.getElementById(`participant_reg_${i}`)?.value.trim().toUpperCase();
       
       if (!name || !registerNumber) {
         showError(`Please fill all participant details (Member ${i})!`);
         return;
       }
+
+      // Check for conflicts
+      const conflict = checkParticipantConflicts(registerNumber, event);
+      if (conflict.hasConflict) {
+        hasConflict = true;
+        conflictMessages.push(`${name} (${registerNumber}): ${conflict.message}`);
+      }
       
       participants.push({ name, registerNumber });
+    }
+
+    // Show all conflicts if any
+    if (hasConflict) {
+      const conflictList = conflictMessages.map(msg => `• ${msg}`).join('\n');
+      showError(`Cannot register due to conflicts:\n\n${conflictList}`);
+      return;
+    }
+
+    // Check for duplicate register numbers in current form
+    const regNumbers = participants.map(p => p.registerNumber);
+    const duplicates = regNumbers.filter((num, idx) => regNumbers.indexOf(num) !== idx);
+    if (duplicates.length > 0) {
+      showError(`Duplicate register numbers in the form: ${duplicates.join(", ")}`);
+      return;
     }
 
     // Submit each participant
     try {
       showLoading("Registering team...");
       
+      let successCount = 0;
+      let failedParticipants = [];
+
       for (const participant of participants) {
         const data = {
           id: leaderId,
           name: participant.name,
           registerno: participant.registerNumber,
           degree: degree,
-          event1: event,
-          event2: "" // We're now doing one event per registration
+          event1: event
         };
 
-        const res = await fetch(PUT_ENDPOINT, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
+        try {
+          // 🔥 CHANGED FROM PUT TO POST
+          const res = await fetch(POST_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          });
 
-        const result = await res.json();
-        
-        if (!result.success) {
-          Swal.close();
-          showError(result.message || "Registration failed");
-          return;
+          const result = await res.json();
+          
+          if (result.success) {
+            successCount++;
+          } else {
+            failedParticipants.push({
+              name: participant.name,
+              error: result.message || "Unknown error"
+            });
+          }
+        } catch (fetchErr) {
+          failedParticipants.push({
+            name: participant.name,
+            error: "Network error: " + fetchErr.message
+          });
         }
       }
 
       Swal.close();
-      showSuccess(`Team registered successfully for ${event}!`);
-      
-      // Reset form
-      eventSelect.value = "";
-      document.getElementById("degree").value = "";
-      participantInputs.innerHTML = "";
-      conflictWarning.style.display = "none";
-      
-      // Reload data
-      loadCandidates();
+
+      if (successCount === participants.length) {
+        showSuccess(`Team registered successfully for ${event}!`);
+        
+        // Reset form
+        eventSelect.value = "";
+        document.getElementById("degree").value = "";
+        participantInputs.innerHTML = "";
+        conflictWarning.style.display = "none";
+        
+        // Reload data
+        loadCandidates();
+      } else if (successCount > 0) {
+        const failedList = failedParticipants.map(f => `${f.name}: ${f.error}`).join('<br>');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Partial Success',
+          html: `<p>${successCount} out of ${participants.length} registered successfully.</p>
+                 <p class="text-sm mt-2">Failed registrations:</p>
+                 <div class="text-xs text-left mt-1 bg-red-50 p-2 rounded">${failedList}</div>`,
+          confirmButtonText: 'OK'
+        });
+        loadCandidates();
+      } else {
+        const failedList = failedParticipants.map(f => `${f.name}: ${f.error}`).join('<br>');
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed',
+          html: `<div class="text-left">
+                   <p class="mb-2">All registrations failed:</p>
+                   <div class="text-sm bg-red-50 p-3 rounded">${failedList}</div>
+                   <p class="text-xs mt-3 text-gray-600">Check browser console (F12) for detailed error information.</p>
+                 </div>`,
+          confirmButtonText: 'OK'
+        });
+      }
 
     } catch (err) {
       Swal.close();
-      console.error(err);
+      console.error("Submit error:", err);
       showError("Registration failed. Please try again.");
     }
   });
 
-  /* ===================== EDIT & DELETE HANDLERS ===================== */
+  /* ===================== DELETE HANDLER ===================== */
 
-  registeredBody.addEventListener("click", async (e) => {
-    const eventName = e.target.dataset.event;
-    
-    if (e.target.classList.contains("deleteBtn")) {
-      const confirmation = await Swal.fire({
-        title: 'Delete Team?',
-        text: `This will remove your entire team from ${eventName}`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Yes, delete it!'
-      });
+  // registeredBody.addEventListener("click", async (e) => {
+  //   if (e.target.classList.contains("deleteBtn")) {
+  //     const eventName = e.target.dataset.event;
+      
+  //     const confirmation = await Swal.fire({
+  //       title: 'Delete Team?',
+  //       text: `This will remove your entire team from ${eventName}`,
+  //       icon: 'warning',
+  //       showCancelButton: true,
+  //       confirmButtonColor: '#ef4444',
+  //       cancelButtonColor: '#6b7280',
+  //       confirmButtonText: 'Yes, delete it!'
+  //     });
 
-      if (confirmation.isConfirmed) {
-        // Here you would implement the delete API call
-        showSuccess("Team deleted successfully!");
-        loadCandidates();
-      }
-    }
-
-    if (e.target.classList.contains("editBtn")) {
-      showError("Edit functionality will be implemented based on your backend API structure.");
-      // Implement edit logic based on your API
-    }
-  });
+  //     if (confirmation.isConfirmed) {
+  //       try {
+  //         showLoading("Deleting team...");
+          
+  //         // Find all participants in this event
+  //         const participants = result.data.filter(c => c.event === eventName);
+          
+  //         let deleteCount = 0;
+  //         for (const participant of participants) {
+  //           try {
+  //             const res = await fetch(
+  //               `${API_BASE}/studreg/${leaderId}/${participant.registerNumber}/${eventName}`,
+  //               { method: "DELETE" }
+  //             );
+              
+  //             const result = await res.json();
+  //             if (result.success) deleteCount++;
+  //           } catch (err) {
+  //             console.error("Delete error:", err);
+  //           }
+  //         }
+          
+  //         Swal.close();
+          
+  //         if (deleteCount > 0) {
+  //           showSuccess("Team deleted successfully!");
+  //           loadCandidates();
+  //         } else {
+  //           showError("Failed to delete team");
+  //         }
+          
+  //       } catch (err) {
+  //         Swal.close();
+  //         console.error("Delete error:", err);
+  //         showError("Failed to delete team");
+  //       }
+  //     }
+  //   }
+  // });
 
 });
 
