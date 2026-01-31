@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const API_BASE = "https://sjcaisymposium.onrender.com";
   const GET_ENDPOINT = `${API_BASE}/getcandidates`;
-  const POST_ENDPOINT = `${API_BASE}/studreg`; // 🔥 CHANGED FROM PUT TO POST
+  const POST_ENDPOINT = `${API_BASE}/studreg`;
+  const DELETE_ENDPOINT = `${API_BASE}/deleteteam`;
 
   const registeredBody = document.getElementById("registeredBody");
   const eventSelect = document.getElementById("eventSelect");
@@ -18,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const conflictWarning = document.getElementById("conflictWarning");
   const conflictMessage = document.getElementById("conflictMessage");
 
-  // EVENT CONFIGURATION WITH SLOTS AND PARTICIPANT COUNTS
+  // EVENT CONFIGURATION
   const EVENT_CONFIG = {
     "Fixathon": { slot: "1", participants: 2, time: "11:00 AM - 1:00 PM" },
     "Bid Mayhem": { slot: "BOTH", participants: 2, time: "11:00 AM - 4:00 PM (Prelims & Mains)" },
@@ -33,8 +34,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const SLOT_1_EVENTS = ["Fixathon", "Bid Mayhem", "Mute Masters", "Treasure Titans"];
   const SLOT_2_EVENTS = ["QRush", "VisionX", "ThinkSync", "Crazy Sell"];
 
-  // Store participant registration data (registerNumber -> events mapping)
-  let participantRegistrations = {};
+  // Track registered data
+  let participantRegistrations = {}; // registerNumber -> events[]
+  let registeredEvents = []; // List of events already registered
+  let uniqueStudentCount = 0; // Total unique students
+  let allRegistrations = []; // Store all data for delete functionality
 
   /* ===================== SWEET ALERT HELPERS ===================== */
 
@@ -71,8 +75,10 @@ document.addEventListener("DOMContentLoaded", () => {
     html += `<optgroup label="Slot 1 (11:00 AM - 1:00 PM)">`;
     SLOT_1_EVENTS.forEach(event => {
       const config = EVENT_CONFIG[event];
-      html += `<option value="${event}">
+      const isRegistered = registeredEvents.includes(event);
+      html += `<option value="${event}" ${isRegistered ? 'disabled' : ''}>
         ${event} (${config.participants} ${config.participants === 1 ? 'participant' : 'participants'})
+        ${isRegistered ? '✓ Registered' : ''}
       </option>`;
     });
     html += `</optgroup>`;
@@ -80,13 +86,52 @@ document.addEventListener("DOMContentLoaded", () => {
     html += `<optgroup label="Slot 2 (2:00 PM - 4:00 PM)">`;
     SLOT_2_EVENTS.forEach(event => {
       const config = EVENT_CONFIG[event];
-      html += `<option value="${event}">
+      const isRegistered = registeredEvents.includes(event);
+      html += `<option value="${event}" ${isRegistered ? 'disabled' : ''}>
         ${event} (${config.participants} ${config.participants === 1 ? 'participant' : 'participants'})
+        ${isRegistered ? '✓ Registered' : ''}
       </option>`;
     });
     html += `</optgroup>`;
 
     eventSelect.innerHTML = html;
+  }
+
+  /* ===================== UPDATE STUDENT COUNT DISPLAY ===================== */
+
+  function updateStudentCountDisplay() {
+    // Add a stats banner at the top of the form
+    const existingBanner = document.getElementById("stats-banner");
+    if (existingBanner) {
+      existingBanner.remove();
+    }
+
+    const remaining = 15 - uniqueStudentCount;
+    const bannerColor = remaining <= 3 ? 'bg-red-50 border-red-300' : remaining <= 7 ? 'bg-yellow-50 border-yellow-300' : 'bg-green-50 border-green-300';
+    const textColor = remaining <= 3 ? 'text-red-700' : remaining <= 7 ? 'text-yellow-700' : 'text-green-700';
+
+    const banner = document.createElement('div');
+    banner.id = 'stats-banner';
+    banner.className = `${bannerColor} border-2 rounded-lg p-4 mb-6`;
+    banner.innerHTML = `
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="${textColor} font-bold text-lg">
+            📊 Department Statistics
+          </p>
+          <p class="text-sm ${textColor} mt-1">
+            ${uniqueStudentCount} / 15 unique students registered
+            <span class="font-semibold ml-2">${remaining} students remaining</span>
+          </p>
+        </div>
+        <div class="${textColor} text-3xl font-bold">
+          ${uniqueStudentCount}/15
+        </div>
+      </div>
+    `;
+
+    const formSection = document.querySelector('.form-section');
+    formSection.insertBefore(banner, formSection.firstChild);
   }
 
   /* ===================== CHECK PARTICIPANT CONFLICTS ===================== */
@@ -103,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (existingEvents.some(e => e.event === "Bid Mayhem")) {
       return {
         hasConflict: true,
-        message: `This participant is already registered for Bid Mayhem and cannot register for other events.`
+        message: `Already in Bid Mayhem (blocks all other events)`
       };
     }
 
@@ -111,15 +156,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (selectedEvent === "Bid Mayhem" && existingEvents.length > 0) {
       return {
         hasConflict: true,
-        message: `This participant is already registered for ${existingEvents.map(e => e.event).join(", ")}. Bid Mayhem cannot be registered with other events.`
+        message: `Already in ${existingEvents.map(e => e.event).join(", ")}. Bid Mayhem cannot be combined.`
       };
     }
 
-    // Check max 2 events rule
+    // Check max 2 events rule per student
     if (existingEvents.length >= 2) {
       return {
         hasConflict: true,
-        message: `This participant has already registered for 2 events: ${existingEvents.map(e => e.event).join(", ")}. Maximum limit reached.`
+        message: `Already in 2 events: ${existingEvents.map(e => e.event).join(", ")}`
       };
     }
 
@@ -132,15 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (slotConflict) {
       return {
         hasConflict: true,
-        message: `Time slot conflict! This participant is already registered for ${slotConflict.event}.`
-      };
-    }
-
-    // Check duplicate event
-    if (existingEvents.some(e => e.event === selectedEvent)) {
-      return {
-        hasConflict: true,
-        message: `This participant is already registered for ${selectedEvent}.`
+        message: `Time conflict with ${slotConflict.event}`
       };
     }
 
@@ -202,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     participantInputs.innerHTML = html;
 
-    // Add real-time conflict checking on register number input
+    // Add real-time conflict checking
     const selectedEvent = eventSelect.value;
     for (let i = 1; i <= count; i++) {
       const regInput = document.getElementById(`participant_reg_${i}`);
@@ -236,7 +273,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Generate participant inputs
     generateParticipantInputs(selectedEvent);
     conflictWarning.style.display = "none";
   });
@@ -246,6 +282,8 @@ document.addEventListener("DOMContentLoaded", () => {
   async function loadCandidates() {
     registeredBody.innerHTML = "";
     participantRegistrations = {};
+    registeredEvents = [];
+    allRegistrations = [];
 
     try {
       const res = await fetch(GET_ENDPOINT, {
@@ -264,28 +302,37 @@ document.addEventListener("DOMContentLoaded", () => {
             </td>
           </tr>
         `;
+        uniqueStudentCount = 0;
         populateEventDropdown();
+        updateStudentCountDisplay();
         return;
       }
 
-      // Build participant registrations map
+      allRegistrations = result.data;
+      
+      // Track unique students and events
+      const uniqueStudents = new Set();
+      
       result.data.forEach(candidate => {
         const regNumber = candidate.registerNumber?.toUpperCase();
-        if (!regNumber) return;
+        if (regNumber) {
+          uniqueStudents.add(regNumber);
+          
+          if (!participantRegistrations[regNumber]) {
+            participantRegistrations[regNumber] = [];
+          }
 
-        if (!participantRegistrations[regNumber]) {
-          participantRegistrations[regNumber] = [];
-        }
-
-        // Add event (new schema uses 'event' field, not 'event1')
-        if (candidate.event) {
-          participantRegistrations[regNumber].push({
-            event: candidate.event,
-            degree: candidate.degree,
-            slot: candidate.slot
-          });
+          if (candidate.event) {
+            participantRegistrations[regNumber].push({
+              event: candidate.event,
+              degree: candidate.degree,
+              slot: candidate.slot
+            });
+          }
         }
       });
+
+      uniqueStudentCount = uniqueStudents.size;
 
       // Group by event for display
       const teamsByEvent = {};
@@ -301,9 +348,9 @@ document.addEventListener("DOMContentLoaded", () => {
               slot: candidate.slot,
               participants: []
             };
+            registeredEvents.push(event);
           }
           
-          // Avoid duplicate participants in same event
           const exists = teamsByEvent[event].participants.some(
             p => p.registerNumber === candidate.registerNumber
           );
@@ -354,11 +401,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       populateEventDropdown();
+      updateStudentCountDisplay();
 
     } catch (err) {
       console.error("Load candidates error:", err);
       showError("Failed to load teams");
       populateEventDropdown();
+      updateStudentCountDisplay();
     }
   }
 
@@ -375,6 +424,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Check if event already registered
+    if (registeredEvents.includes(event)) {
+      showError(`Your team is already registered for ${event}. Only one team per event is allowed.`);
+      return;
+    }
+
     const config = EVENT_CONFIG[event];
     const participantCount = config.participants;
     
@@ -382,6 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const participants = [];
     let hasConflict = false;
     let conflictMessages = [];
+    const newStudents = new Set();
 
     for (let i = 1; i <= participantCount; i++) {
       const name = document.getElementById(`participant_name_${i}`)?.value.trim();
@@ -390,6 +446,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!name || !registerNumber) {
         showError(`Please fill all participant details (Member ${i})!`);
         return;
+      }
+
+      // Track new students for 15-limit check
+      if (!participantRegistrations[registerNumber]) {
+        newStudents.add(registerNumber);
       }
 
       // Check for conflicts
@@ -402,7 +463,13 @@ document.addEventListener("DOMContentLoaded", () => {
       participants.push({ name, registerNumber });
     }
 
-    // Show all conflicts if any
+    // Check 15 student limit
+    if (uniqueStudentCount + newStudents.size > 15) {
+      showError(`This would exceed the 15-student limit. You have ${uniqueStudentCount} students registered. Adding ${newStudents.size} new students would total ${uniqueStudentCount + newStudents.size}.`);
+      return;
+    }
+
+    // Show conflicts
     if (hasConflict) {
       const conflictList = conflictMessages.map(msg => `• ${msg}`).join('\n');
       showError(`Cannot register due to conflicts:\n\n${conflictList}`);
@@ -434,7 +501,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         try {
-          // 🔥 CHANGED FROM PUT TO POST
           const res = await fetch(POST_ENDPOINT, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -491,7 +557,6 @@ document.addEventListener("DOMContentLoaded", () => {
           html: `<div class="text-left">
                    <p class="mb-2">All registrations failed:</p>
                    <div class="text-sm bg-red-50 p-3 rounded">${failedList}</div>
-                   <p class="text-xs mt-3 text-gray-600">Check browser console (F12) for detailed error information.</p>
                  </div>`,
           confirmButtonText: 'OK'
         });
@@ -504,61 +569,49 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  /* ===================== DELETE HANDLER ===================== */
+  /* ===================== DELETE TEAM HANDLER ===================== */
 
-  // registeredBody.addEventListener("click", async (e) => {
-  //   if (e.target.classList.contains("deleteBtn")) {
-  //     const eventName = e.target.dataset.event;
+  registeredBody.addEventListener("click", async (e) => {
+    if (e.target.classList.contains("deleteBtn")) {
+      const eventName = e.target.dataset.event;
       
-  //     const confirmation = await Swal.fire({
-  //       title: 'Delete Team?',
-  //       text: `This will remove your entire team from ${eventName}`,
-  //       icon: 'warning',
-  //       showCancelButton: true,
-  //       confirmButtonColor: '#ef4444',
-  //       cancelButtonColor: '#6b7280',
-  //       confirmButtonText: 'Yes, delete it!'
-  //     });
+      const confirmation = await Swal.fire({
+        title: 'Delete Team?',
+        text: `This will remove your entire team from ${eventName}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, delete it!'
+      });
 
-  //     if (confirmation.isConfirmed) {
-  //       try {
-  //         showLoading("Deleting team...");
+      if (confirmation.isConfirmed) {
+        try {
+          showLoading("Deleting team...");
           
-  //         // Find all participants in this event
-  //         const participants = result.data.filter(c => c.event === eventName);
+          const res = await fetch(`${DELETE_ENDPOINT}/${leaderId}/${eventName}`, {
+            method: "DELETE"
+          });
           
-  //         let deleteCount = 0;
-  //         for (const participant of participants) {
-  //           try {
-  //             const res = await fetch(
-  //               `${API_BASE}/studreg/${leaderId}/${participant.registerNumber}/${eventName}`,
-  //               { method: "DELETE" }
-  //             );
-              
-  //             const result = await res.json();
-  //             if (result.success) deleteCount++;
-  //           } catch (err) {
-  //             console.error("Delete error:", err);
-  //           }
-  //         }
+          const result = await res.json();
           
-  //         Swal.close();
+          Swal.close();
           
-  //         if (deleteCount > 0) {
-  //           showSuccess("Team deleted successfully!");
-  //           loadCandidates();
-  //         } else {
-  //           showError("Failed to delete team");
-  //         }
+          if (result.success) {
+            showSuccess(`Team deleted! Removed ${result.deletedCount} participant(s).`);
+            loadCandidates();
+          } else {
+            showError(result.message || "Failed to delete team");
+          }
           
-  //       } catch (err) {
-  //         Swal.close();
-  //         console.error("Delete error:", err);
-  //         showError("Failed to delete team");
-  //       }
-  //     }
-  //   }
-  // });
+        } catch (err) {
+          Swal.close();
+          console.error("Delete error:", err);
+          showError("Failed to delete team");
+        }
+      }
+    }
+  });
 
 });
 
