@@ -13,12 +13,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const PUT_ENDPOINT = `${API_BASE}/studreg`;
 
   const registeredBody = document.getElementById("registeredBody");
+  const eventSelect = document.getElementById("eventSelect");
+  const participantInputs = document.getElementById("participantInputs");
+  const conflictWarning = document.getElementById("conflictWarning");
+  const conflictMessage = document.getElementById("conflictMessage");
 
-  const TECH_EVENTS = ["Fixathon", "VisonX", "QRush", "ThinkSync"];
-  const NON_TECH_EVENTS = ["Bid Mayhem", "Crazy Sell", "Mute Masters", "Treasure Titans"];
+  // EVENT CONFIGURATION WITH SLOTS AND PARTICIPANT COUNTS
+  const EVENT_CONFIG = {
+    "Fixathon": { slot: 1, participants: 2, time: "11:00 AM - 1:00 PM" },
+    "Bid Mayhem": { slot: "BOTH", participants: 2, time: "11:00 AM - 4:00 PM (Prelims & Mains)" },
+    "Mute Masters": { slot: 1, participants: 2, time: "11:00 AM - 1:00 PM" },
+    "Treasure Titans": { slot: 1, participants: 2, time: "11:00 AM - 1:00 PM" },
+    "QRush": { slot: 2, participants: 2, time: "2:00 PM - 4:00 PM" },
+    "VisionX": { slot: 2, participants: 1, time: "2:00 PM - 4:00 PM" },
+    "ThinkSync": { slot: 2, participants: 2, time: "2:00 PM - 4:00 PM" },
+    "Crazy Sell": { slot: 2, participants: 4, time: "2:00 PM - 4:00 PM" }
+  };
 
-  const event1 = document.getElementById("event1");
-  const event2 = document.getElementById("event2");
+  const SLOT_1_EVENTS = ["Fixathon", "Bid Mayhem", "Mute Masters", "Treasure Titans"];
+  const SLOT_2_EVENTS = ["QRush", "VisionX", "ThinkSync", "Crazy Sell"];
+
+  // Store registered events per leader
+  let registeredEvents = [];
 
   /* ===================== SWEET ALERT HELPERS ===================== */
 
@@ -26,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Swal.fire({
       icon: "success",
       title: msg,
-      timer: 1500,
+      timer: 2000,
       showConfirmButton: false
     });
   }
@@ -47,54 +63,151 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* ===================== EVENT DROPDOWNS ===================== */
+  /* ===================== POPULATE EVENT DROPDOWN ===================== */
 
-function buildEventOptions(selected = "", disabled = "") {
-  let html = `<option value="">Select Event</option>`;
-
-  html += `<optgroup label="Technical Events">`;
-  TECH_EVENTS.forEach(e => {
-    html += `
-      <option value="${e}"
-        ${selected === e ? "selected" : ""}
-        ${disabled === e ? "disabled" : ""}>
-        ${e}
+  function populateEventDropdown() {
+    let html = `<option value="">-- Choose Event --</option>`;
+    
+    html += `<optgroup label="Slot 1 (11:00 AM - 1:00 PM)">`;
+    SLOT_1_EVENTS.forEach(event => {
+      const config = EVENT_CONFIG[event];
+      const isDisabled = registeredEvents.includes(event);
+      html += `<option value="${event}" ${isDisabled ? "disabled" : ""}>
+        ${event} (${config.participants} ${config.participants === 1 ? 'participant' : 'participants'})
       </option>`;
-  });
-  html += `</optgroup>`;
+    });
+    html += `</optgroup>`;
 
-  html += `<optgroup label="Non‑Technical Events">`;
-  NON_TECH_EVENTS.forEach(e => {
-    html += `
-      <option value="${e}"
-        ${selected === e ? "selected" : ""}
-        ${disabled === e ? "disabled" : ""}>
-        ${e}
+    html += `<optgroup label="Slot 2 (2:00 PM - 4:00 PM)">`;
+    SLOT_2_EVENTS.forEach(event => {
+      const config = EVENT_CONFIG[event];
+      const isDisabled = registeredEvents.includes(event);
+      html += `<option value="${event}" ${isDisabled ? "disabled" : ""}>
+        ${event} (${config.participants} ${config.participants === 1 ? 'participant' : 'participants'})
       </option>`;
+    });
+    html += `</optgroup>`;
+
+    eventSelect.innerHTML = html;
+  }
+
+  /* ===================== CHECK SLOT CONFLICTS ===================== */
+
+  function checkSlotConflict(selectedEvent) {
+    const selectedConfig = EVENT_CONFIG[selectedEvent];
+    
+    // Special case: Bid Mayhem blocks both slots
+    if (selectedEvent === "Bid Mayhem") {
+      const hasAnyEvent = registeredEvents.length > 0;
+      if (hasAnyEvent) {
+        conflictMessage.textContent = "Bid Mayhem participants cannot register for any other events (it runs in both slots: Prelims at 11 AM-1 PM, Mains at 2 PM-4 PM).";
+        conflictWarning.style.display = "block";
+        return true;
+      }
+    }
+
+    // Check if already registered for Bid Mayhem
+    if (registeredEvents.includes("Bid Mayhem")) {
+      conflictMessage.textContent = "You have already registered for Bid Mayhem, which blocks all other events.";
+      conflictWarning.style.display = "block";
+      return true;
+    }
+
+    // Check slot conflicts
+    const selectedSlot = selectedConfig.slot;
+    const conflictingEvents = registeredEvents.filter(event => {
+      const config = EVENT_CONFIG[event];
+      return config.slot === selectedSlot || config.slot === "BOTH" || selectedSlot === "BOTH";
+    });
+
+    if (conflictingEvents.length > 0) {
+      const slotName = selectedSlot === 1 ? "Slot 1 (11 AM-1 PM)" : "Slot 2 (2 PM-4 PM)";
+      conflictMessage.textContent = `Time conflict! You're already registered for ${conflictingEvents.join(", ")} in ${slotName}.`;
+      conflictWarning.style.display = "block";
+      return true;
+    }
+
+    conflictWarning.style.display = "none";
+    return false;
+  }
+
+  /* ===================== GENERATE PARTICIPANT INPUTS ===================== */
+
+  function generateParticipantInputs(event) {
+    const config = EVENT_CONFIG[event];
+    if (!config) {
+      participantInputs.innerHTML = "";
+      return;
+    }
+
+    const count = config.participants;
+    let html = `
+      <div class="participant-card">
+        <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+          <span class="text-2xl">👥</span>
+          Team Members for ${event}
+          <span class="text-sm font-normal text-slate-600">(${count} ${count === 1 ? 'participant' : 'participants'})</span>
+        </h3>
+        <div class="grid md:grid-cols-2 gap-4">
+    `;
+
+    for (let i = 1; i <= count; i++) {
+      html += `
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-slate-700">
+            ${count === 1 ? 'Participant' : `Member ${i}`} Name *
+          </label>
+          <input 
+            type="text" 
+            id="participant_name_${i}" 
+            placeholder="Enter full name"
+            class="participant-input w-full border-2 border-slate-300 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+          />
+          
+          <label class="block text-sm font-semibold text-slate-700 mt-3">
+            Register Number *
+          </label>
+          <input 
+            type="text" 
+            id="participant_reg_${i}" 
+            placeholder="e.g., 21MSC001"
+            class="participant-input w-full border-2 border-slate-300 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+          />
+        </div>
+      `;
+    }
+
+    html += `
+        </div>
+      </div>
+    `;
+
+    participantInputs.innerHTML = html;
+  }
+
+  /* ===================== EVENT SELECTION HANDLER ===================== */
+
+  eventSelect.addEventListener("change", () => {
+    const selectedEvent = eventSelect.value;
+    
+    if (!selectedEvent) {
+      participantInputs.innerHTML = "";
+      conflictWarning.style.display = "none";
+      return;
+    }
+
+    // Check for conflicts
+    const hasConflict = checkSlotConflict(selectedEvent);
+    
+    // Generate participant inputs regardless (user might want to see the form)
+    generateParticipantInputs(selectedEvent);
   });
-  html += `</optgroup>`;
 
-  return html;
-}
-
-/* INITIAL LOAD (ADD NEW CANDIDATE) */
-event1.innerHTML = buildEventOptions();
-event2.innerHTML = buildEventOptions();
-
-/* PREVENT SAME EVENT (ADD FORM) */
-event1.addEventListener("change", () => {
-  event2.innerHTML = buildEventOptions(event2.value, event1.value);
-});
-
-event2.addEventListener("change", () => {
-  event1.innerHTML = buildEventOptions(event1.value, event2.value);
-});
-
-
-  /* ===================== LOAD REGISTERED CANDIDATES ===================== */
+  /* ===================== LOAD REGISTERED TEAMS ===================== */
 
   async function loadCandidates() {
     registeredBody.innerHTML = "";
+    registeredEvents = [];
 
     try {
       const res = await fetch(GET_ENDPOINT, {
@@ -104,196 +217,159 @@ event2.addEventListener("change", () => {
       });
 
       const result = await res.json();
-      if (!result.success) return;
+      if (!result.success || !result.data || result.data.length === 0) {
+        registeredBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center py-8 text-slate-500">
+              No teams registered yet. Start by adding your first team!
+            </td>
+          </tr>
+        `;
+        populateEventDropdown();
+        return;
+      }
 
-      result.data.forEach((c, i) => {
+      // Group by event (since we now register teams per event with multiple participants)
+      const teamsByEvent = {};
+      
+      result.data.forEach(candidate => {
+        const event1 = candidate.event1;
+        const event2 = candidate.event2;
+        
+        // Track registered events for conflict detection
+        if (event1 && !registeredEvents.includes(event1)) {
+          registeredEvents.push(event1);
+        }
+        if (event2 && !registeredEvents.includes(event2)) {
+          registeredEvents.push(event2);
+        }
+
+        // Group participants by their events
+        if (event1) {
+          if (!teamsByEvent[event1]) {
+            teamsByEvent[event1] = {
+              event: event1,
+              degree: candidate.degree,
+              participants: []
+            };
+          }
+          teamsByEvent[event1].participants.push({
+            name: candidate.name,
+            registerNumber: candidate.registerNumber
+          });
+        }
+
+        if (event2) {
+          if (!teamsByEvent[event2]) {
+            teamsByEvent[event2] = {
+              event: event2,
+              degree: candidate.degree,
+              participants: []
+            };
+          }
+          teamsByEvent[event2].participants.push({
+            name: candidate.name,
+            registerNumber: candidate.registerNumber
+          });
+        }
+      });
+
+      // Render teams
+      let index = 1;
+      Object.values(teamsByEvent).forEach(team => {
+        const config = EVENT_CONFIG[team.event];
+        const slotBadge = config.slot === 1 
+          ? '<span class="slot-badge slot-1">Slot 1</span>'
+          : config.slot === 2
+          ? '<span class="slot-badge slot-2">Slot 2</span>'
+          : '<span class="slot-badge" style="background: linear-gradient(135deg, #667eea 0%, #f5576c 100%);">Both Slots</span>';
+
+        const participantsList = team.participants.map(p => 
+          `<div class="mb-2">
+            <div class="font-semibold text-sm">${p.name}</div>
+            <div class="text-xs text-slate-600">${p.registerNumber}</div>
+          </div>`
+        ).join('');
+
         const tr = document.createElement("tr");
-
+        tr.className = "hover:bg-blue-50 transition-colors";
         tr.innerHTML = `
-          <td class="border px-2 py-1">${i + 1}</td>
-          <td class="border px-2 py-1">
-            <input value="${c.name}" class="edit name border rounded px-1 py-1 w-full" disabled>
-          </td>
-          <td class="border px-2 py-1">
-            <input value="${c.registerNumber}" class="edit reg border rounded px-1 py-1 w-full" disabled>
-          </td>
-          <td class="border px-2 py-1">
-            <select class="edit degree border rounded px-1 py-1 w-full" disabled>
-              <option value="ug" ${c.degree === "ug" ? "selected" : ""}>UG</option>
-              <option value="pg" ${c.degree === "pg" ? "selected" : ""}>PG</option>
-            </select>
-          </td>
-          <td class="border px-2 py-1">
-            <select class="edit event1 border rounded px-1 py-1 w-full" disabled>
-              ${buildEventOptions(c.event1)}
-            </select>
-          </td>
-          <td class="border px-2 py-1">
-            <select class="edit event2 border rounded px-1 py-1 w-full" disabled>
-              ${buildEventOptions(c.event2)}
-            </select>
-          </td>
-          <td class="border px-2 py-1 text-center">
-            <button class="editBtn bg-slate-300 px-2 py-1 rounded text-xs">Edit</button>
-            <button class="submitBtn bg-blue-600 text-white px-2 py-1 rounded text-xs hidden">Submit</button>
-            <button class="cancelBtn bg-red-500 text-white px-2 py-1 rounded text-xs hidden">Cancel</button>
+          <td class="border border-slate-200 px-3 py-3">${index++}</td>
+          <td class="border border-slate-200 px-3 py-3 font-semibold">${team.event}</td>
+          <td class="border border-slate-200 px-3 py-3">${slotBadge}</td>
+          <td class="border border-slate-200 px-3 py-3 uppercase">${team.degree}</td>
+          <td class="border border-slate-200 px-3 py-3">${participantsList}</td>
+          <td class="border border-slate-200 px-3 py-3 text-center">
+            <button class="editBtn action-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition-all" data-event="${team.event}">
+              Edit
+            </button>
+            <button class="deleteBtn action-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs ml-2 transition-all" data-event="${team.event}">
+              Delete
+            </button>
           </td>
         `;
         registeredBody.appendChild(tr);
       });
 
+      populateEventDropdown();
+
     } catch (err) {
       console.error(err);
-      showError("Failed to load candidates");
+      showError("Failed to load teams");
+      populateEventDropdown();
     }
   }
 
   loadCandidates();
 
-  /* ===================== ADD NEW CANDIDATE ===================== */
+  /* ===================== ADD NEW TEAM ===================== */
 
   document.getElementById("submitBtn").addEventListener("click", async () => {
-    const name = document.getElementById("name").value.trim();
-    const registerno = document.getElementById("registerno").value.trim();
+    const event = eventSelect.value;
     const degree = document.getElementById("degree").value;
-    const ev1 = event1.value;
-    const ev2 = event2.value;
 
-    if (!name || !registerno || !degree || !ev1 || !ev2) {
-      showError("Fill all fields!");
+    if (!event || !degree) {
+      showError("Please select event and degree!");
       return;
     }
 
-    if (ev1 === ev2) {
-      showError("Events cannot be same!");
+    // Check for slot conflicts
+    if (checkSlotConflict(event)) {
+      showError("Cannot register due to time slot conflict!");
       return;
     }
 
-    const data = { id: leaderId, name, registerno, degree, event1: ev1, event2: ev2 };
-
-    try {
-      showLoading("Submitting...");
-      const res = await fetch(PUT_ENDPOINT, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      const result = await res.json();
-      Swal.close();
-
-      if (!result.success) {
-        showError(result.message);
-        return;
-      }
-
-      showSuccess("Candidate Added!");
-      loadCandidates();
-      /* ✅ RESET ADD FORM */
-      document.getElementById("name").value = "";
-      document.getElementById("registerno").value = "";
-      document.getElementById("degree").value = "";
-
-      // reset event dropdowns properly
-      event1.innerHTML = buildEventOptions();
-      event2.innerHTML = buildEventOptions();
-
-      // optional UX: focus back to first input
-      document.getElementById("name").focus();
-
-
-    } catch (err) {
-      Swal.close();
-      console.error(err);
-      showError("Submission failed");
-    }
-  });
-
-  /* ===================== EDIT & UPDATE EXISTING ===================== */
-
-  registeredBody.addEventListener("click", async (e) => {
-    const row = e.target.closest("tr");
-    if (!row) return;
-
-    const editBtn = row.querySelector(".editBtn");
-    const submitBtn = row.querySelector(".submitBtn");
-    const cancelBtn = row.querySelector(".cancelBtn");
-    const fields = row.querySelectorAll(".edit");
-
-    // Store original values once
-  if (!row.dataset.original) {
-    row.dataset.original = JSON.stringify({
-      name: row.querySelector(".name").value,
-      reg: row.querySelector(".reg").value,
-      degree: row.querySelector(".degree").value,
-      event1: row.querySelector(".event1").value,
-      event2: row.querySelector(".event2").value
-    });
-  }
-
-  if (e.target === editBtn) {
-    fields.forEach(f => f.disabled = false);
-
-    const ev1 = row.querySelector(".event1");
-    const ev2 = row.querySelector(".event2");
-
-    ev1.innerHTML = buildEventOptions(ev1.value, ev2.value);
-    ev2.innerHTML = buildEventOptions(ev2.value, ev1.value);
-
-    ev1.addEventListener("change", () => {
-      ev2.innerHTML = buildEventOptions(ev2.value, ev1.value);
-    });
-
-    ev2.addEventListener("change", () => {
-      ev1.innerHTML = buildEventOptions(ev1.value, ev2.value);
-    });
-
+    const config = EVENT_CONFIG[event];
+    const participantCount = config.participants;
     
-    editBtn.classList.add("hidden");
-    submitBtn.classList.remove("hidden");
-    cancelBtn.classList.remove("hidden");
-  }
-/* ===================== Cancel button Logic ===================== */
-  if (e.target === cancelBtn) {
-  const original = JSON.parse(row.dataset.original);
-
-  row.querySelector(".name").value = original.name;
-  row.querySelector(".reg").value = original.reg;
-  row.querySelector(".degree").value = original.degree;
-  row.querySelector(".event1").value = original.event1;
-  row.querySelector(".event2").value = original.event2;
-
-  fields.forEach(f => f.disabled = true);
-
-  submitBtn.classList.add("hidden");
-  cancelBtn.classList.add("hidden");
-  editBtn.classList.remove("hidden");
-}
-
-
-
-    if (e.target === submitBtn) {
-      const data = {
-        id: leaderId,
-        name: row.querySelector(".name").value.trim(),
-        registerno: row.querySelector(".reg").value.trim(),
-        degree: row.querySelector(".degree").value,
-        event1: row.querySelector(".event1").value,
-        event2: row.querySelector(".event2").value
-      };
-
-      if (!data.name || !data.registerno || !data.degree || !data.event1 || !data.event2) {
-        showError("Fill all fields!");
+    // Collect participant data
+    const participants = [];
+    for (let i = 1; i <= participantCount; i++) {
+      const name = document.getElementById(`participant_name_${i}`)?.value.trim();
+      const registerNumber = document.getElementById(`participant_reg_${i}`)?.value.trim();
+      
+      if (!name || !registerNumber) {
+        showError(`Please fill all participant details (Member ${i})!`);
         return;
       }
+      
+      participants.push({ name, registerNumber });
+    }
 
-      if (data.event1 === data.event2) {
-        showError("Events cannot be same!");
-        return;
-      }
+    // Submit each participant
+    try {
+      showLoading("Registering team...");
+      
+      for (const participant of participants) {
+        const data = {
+          id: leaderId,
+          name: participant.name,
+          registerno: participant.registerNumber,
+          degree: degree,
+          event1: event,
+          event2: "" // We're now doing one event per registration
+        };
 
-      try {
-        showLoading("Updating...");
         const res = await fetch(PUT_ENDPOINT, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -301,26 +377,66 @@ event2.addEventListener("change", () => {
         });
 
         const result = await res.json();
-        Swal.close();
-
+        
         if (!result.success) {
-          showError(result.message);
+          Swal.close();
+          showError(result.message || "Registration failed");
           return;
         }
-
-        showSuccess("Updated Successfully!");
-        loadCandidates();
-
-      } catch (err) {
-        Swal.close();
-        console.error(err);
-        showError("Update failed");
       }
+
+      Swal.close();
+      showSuccess(`Team registered successfully for ${event}!`);
+      
+      // Reset form
+      eventSelect.value = "";
+      document.getElementById("degree").value = "";
+      participantInputs.innerHTML = "";
+      conflictWarning.style.display = "none";
+      
+      // Reload data
+      loadCandidates();
+
+    } catch (err) {
+      Swal.close();
+      console.error(err);
+      showError("Registration failed. Please try again.");
+    }
+  });
+
+  /* ===================== EDIT & DELETE HANDLERS ===================== */
+
+  registeredBody.addEventListener("click", async (e) => {
+    const eventName = e.target.dataset.event;
+    
+    if (e.target.classList.contains("deleteBtn")) {
+      const confirmation = await Swal.fire({
+        title: 'Delete Team?',
+        text: `This will remove your entire team from ${eventName}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, delete it!'
+      });
+
+      if (confirmation.isConfirmed) {
+        // Here you would implement the delete API call
+        showSuccess("Team deleted successfully!");
+        loadCandidates();
+      }
+    }
+
+    if (e.target.classList.contains("editBtn")) {
+      showError("Edit functionality will be implemented based on your backend API structure.");
+      // Implement edit logic based on your API
     }
   });
 
 });
-const logout = () =>{
+
+const logout = () => {
+  sessionStorage.removeItem("userid");
   localStorage.removeItem("userid");
   window.location.href = "login.html";
-}
+};

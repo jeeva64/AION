@@ -1,98 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <title>Login | AION 2K26</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- <link rel="stylesheet" href="CSS/global.css"> -->
+  <link rel="shortcut icon" href="Images/favicon.png" type="image/x-icon">
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- STYLES -->
+  <link rel="stylesheet" href="CSS/global.css">
+  <link rel="stylesheet" href="CSS/navbar.css">
+  <link rel="stylesheet" href="CSS/landing.css">
+  <link rel="stylesheet" href="CSS/footer.css">
 </head>
 
-<body class="bg-slate-50 text-slate-900 font-sans">
+<body>
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/10">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
 
-  <!-- NAVBAR -->
-<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b">
-  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+      <!-- LOGO -->
+      <a href="/" class="flex items-center gap-1 text-xl font-extrabold tracking-tight">
+        <span class="text-white">AION</span>
+        <span class="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+          2K26
+        </span>
+      </a>
 
-    <!-- LOGO -->
-    <a href="index.html" class="flex items-center gap-2">
-      <!-- <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold">
-        S
-      </div> -->
-      <span class="font-bold text-xl">
-        AION<span class="text-blue-600"> 2K26</span>
-      </span>
-    </a>
+      <!-- DESKTOP MENU -->
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <a href="/" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="brochure.html" class="nav-link">Brochure</a>
+        <a href="login.html" class="nav-link">Login</a>
 
-    <!-- DESKTOP MENU -->
-    <div class="hidden md:flex gap-6 text-sm font-medium items-center">
-      <a href="index.html" class="nav-link text-blue-600">Home</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="brochure.html" class="nav-link">Brochure</a>
-      <a href="login.html" class="nav-link">Login</a>
-      <a href="register.html" class="btn-primary">Register</a>
+        <a href="register.html" class="ml-2 px-4 py-1.5 rounded-full text-sm font-semibold
+               bg-blue-600 hover:bg-blue-700 transition shadow-md">
+          Register
+        </a>
+      </div>
+
+      <!-- MOBILE TOGGLE -->
+      <button id="menuBtn" class="md:hidden text-white focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
     </div>
 
-    <!-- MOBILE TOGGLE -->
-    <button class="md:hidden text-slate-700" id="menuBtn">☰</button>
+    <!-- MOBILE MENU -->
+    <div id="mobileMenu"
+      class="hidden md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-white/10 px-6 py-5 space-y-4">
+
+      <a href="/" class="block text-blue-400 font-semibold">Home</a>
+      <a href="about.html" class="block hover:text-blue-400">About</a>
+      <a href="brochure.html" class="block hover:text-blue-400">Brochure</a>
+      <a href="login.html" class="block hover:text-blue-400">Login</a>
+
+      <a href="register.html" class="block text-center mt-3 py-2 rounded-full
+              bg-blue-600 hover:bg-blue-700 transition font-semibold">
+        Register
+      </a>
+    </div>
+  </nav>
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+  <!-- Animated Background -->
+  <div class="hero-background">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+  </div>
+  <!-- Particles -->
+  <div class="particles-container">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
+    <div class="particle particle-6"></div>
   </div>
 
-  <!-- MOBILE MENU -->
-  <div id="mobileMenu" class="hidden md:hidden bg-white border-t shadow px-4 py-4 space-y-3">
-    <a href="index.html" class="block nav-link">Home</a>
-    <a href="about.html" class="block nav-link">About</a>
-    <a href="brochure.html" class="block nav-link">Brochure</a>
-    <a href="login.html" class="block nav-link">Login</a>
-    <a href="register.html" class="block btn-primary text-center">Register</a>
-  </div>
-</nav>
+  <div class="hero-content">
+    <div class="min-h-screen flex items-center justify-center px-4">
+      <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-center mb-4">Team Leader Login</h2>
+        <p class="text-center text-gray-500 mb-6">Login to manage your team and registrations</p>
 
-  <div class="min-h-screen flex items-center justify-center px-4 mt-6">
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+        <form id="loginForm" class="space-y-5" novalidate>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
+            <input id="email" type="email"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter your email" required />
+          </div>
 
-      <h2 class="text-2xl font-bold text-center mb-6">
-        Team Leader Login
-      </h2>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Password</label>
+            <input id="password" type="password"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter your password" minlength="6" required />
+          </div>
 
-      <p class="text-center text-gray-500 mb-8">
-        Login to manage your team and registrations
-      </p>
+          <button type="submit"
+            class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+            Login
+          </button>
 
-      <form id="loginForm" class="space-y-5" novalidate>
+          <p class="text-center text-sm text-gray-500 mt-2">
+            Don't have an account?
+            <a href="register.html" class="text-blue-600 font-medium hover:underline">
+              Register here
+            </a>
+          </p>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
-          <input id="email" type="email"
-            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="Enter your email" required />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-600 mb-1">Password</label>
-          <input id="password" type="password"
-            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="Enter your password" minlength="6" required />
-        </div>
-
-        <button type="submit"
-          class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-          Login
-        </button>
-
-        <p class="text-center text-sm text-gray-500 mt-4">
-          Don't have an account?
-          <a href="register.html" class="text-blue-600 font-medium hover:underline">
-            Register here
-          </a>
-        </p>
-
-      </form>
+        </form>
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- LOGIN JS -->
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+
+      <div class="footer-brand">
+        <h3 class="footer-title">
+          AION<span class="footer-accent">2K26</span>
+        </h3>
+        <p class="footer-tagline">State Level Technical Symposium</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="about.html" class="footer-link">About</a>
+        <span class="footer-separator">•</span>
+        <a href="brochure.html" class="footer-link">Brochure</a>
+        <span class="footer-separator">•</span>
+        <a href="register.html" class="footer-link">Register</a>
+        <span class="footer-separator">•</span>
+        <a href="login.html" class="footer-link">Login</a>
+      </div>
+
+      <!-- Developer Credits -->
+      <div class="developer-credits">
+        <p class="credits-label">Developed By</p>
+        <div class="developers">
+          <div class="developer">
+            <p class="developer-name dev-primary">Jeeva Loganathan</p>
+            <p class="developer-role">1st M.Sc AI</p>
+          </div>
+          <span class="dev-separator">|</span>
+          <div class="developer">
+            <p class="developer-name dev-secondary">William James</p>
+            <p class="developer-role">1st M.Sc AI</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 AION Symposium. All rights reserved.</p>
+        <p class="footer-college">St. Joseph's College (Autonomous), Tiruchirappalli</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="js/landing.js"></script>
   <script src="js/loginApi.js"></script>
 </body>
 

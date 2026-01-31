@@ -1,49 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About Department | AION 2K26</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>About | AION 2K26</title>
+  <link rel="shortcut icon" href="Images/favicon.png" type="image/x-icon">
+
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- External styles -->
+  <!-- STYLES -->
+   <link rel="stylesheet" href="CSS/about.css">
   <link rel="stylesheet" href="CSS/global.css">
-  <link rel="stylesheet" href="CSS/about.css">
+  <link rel="stylesheet" href="CSS/navbar.css">
+  <link rel="stylesheet" href="CSS/footer.css">
 </head>
 
 <body class="bg-slate-950 text-white overflow-x-hidden">
 
-  <!-- NAVBAR -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-lg border-b border-white/10">
-    <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-      <a href="index.html" class="flex items-center gap-2 text-2xl font-bold">
-        AION<span class="text-blue-500">2K26</span>
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/10">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
+
+      <!-- LOGO -->
+      <a href="/" class="flex items-center gap-1 text-xl font-extrabold tracking-tight">
+        <span class="text-white">AION</span>
+        <span class="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+          2K26
+        </span>
       </a>
-      
-      <div class="hidden md:flex gap-8 text-sm font-medium items-center">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="about.html" class="nav-link text-blue-500">About</a>
+
+      <!-- DESKTOP MENU -->
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <a href="/" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
         <a href="brochure.html" class="nav-link">Brochure</a>
         <a href="login.html" class="nav-link">Login</a>
-        <a href="register.html" class="btn-primary">Register</a>
+
+        <a href="register.html" class="ml-2 px-4 py-1.5 rounded-full text-sm font-semibold
+               bg-blue-600 hover:bg-blue-700 transition shadow-md">
+          Register
+        </a>
       </div>
-      
-      <button class="md:hidden text-white" id="menuBtn">
+
+      <!-- MOBILE TOGGLE -->
+      <button id="menuBtn" class="md:hidden text-white focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
     </div>
-    
-    <div id="mobileMenu" class="hidden md:hidden bg-slate-900 border-t border-white/10 px-6 py-4 space-y-3">
-      <a href="index.html" class="block py-2 hover:text-blue-400">Home</a>
-      <a href="about.html" class="block py-2 text-blue-400">About</a>
-      <a href="brochure.html" class="block py-2 hover:text-blue-400">Brochure</a>
-      <a href="login.html" class="block py-2 hover:text-blue-400">Login</a>
-      <a href="register.html" class="block text-center py-2 bg-blue-600 rounded-full hover:bg-blue-700">Register</a>
+
+    <!-- MOBILE MENU -->
+    <div id="mobileMenu"
+      class="hidden md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-white/10 px-6 py-5 space-y-4">
+
+      <a href="/" class="block text-blue-400 font-semibold">Home</a>
+      <a href="about.html" class="block hover:text-blue-400">About</a>
+      <a href="brochure.html" class="block hover:text-blue-400">Brochure</a>
+      <a href="login.html" class="block hover:text-blue-400">Login</a>
+
+      <a href="register.html" class="block text-center mt-3 py-2 rounded-full
+              bg-blue-600 hover:bg-blue-700 transition font-semibold">
+        Register
+      </a>
     </div>
   </nav>
 
@@ -51,19 +76,21 @@
 
     <!-- HERO SECTION -->
     <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-      
+
       <!-- Animated Background -->
       <div class="absolute inset-0">
         <div class="absolute top-20 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl animate-float"></div>
-        <div class="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-float-delay"></div>
+        <div class="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-float-delay">
+        </div>
       </div>
 
       <div class="relative z-10 max-w-7xl mx-auto px-6 py-20">
         <div class="grid gap-12 md:grid-cols-2 items-center">
-          
+
           <!-- LEFT -->
           <div class="animate-fade-up">
-            <span class="inline-block px-4 py-2 bg-blue-500/10 rounded-full text-sm text-blue-400 border border-blue-500/20 mb-4">
+            <span
+              class="inline-block px-4 py-2 bg-blue-500/10 rounded-full text-sm text-blue-400 border border-blue-500/20 mb-4">
               About Us
             </span>
             <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
@@ -84,7 +111,7 @@
               <div class="flex items-start gap-3">
                 <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
                 <p class="text-slate-300">Industry-oriented curriculum designed for real-world applications</p>
@@ -92,7 +119,7 @@
               <div class="flex items-start gap-3">
                 <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
                 <p class="text-slate-300">Research-focused learning environment</p>
@@ -100,7 +127,7 @@
               <div class="flex items-start gap-3">
                 <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
                 <p class="text-slate-300">Competitive symposium and innovation culture</p>
@@ -115,7 +142,7 @@
     <!-- WHO WE ARE -->
     <section class="max-w-7xl mx-auto px-6 py-20">
       <div class="grid gap-12 md:grid-cols-2 items-center">
-        
+
         <!-- TEXT -->
         <div class="order-2 md:order-1">
           <h2 class="text-4xl font-bold mb-6">
@@ -123,15 +150,16 @@
           </h2>
           <div class="space-y-4 text-slate-300 text-lg">
             <p>
-              The Department of Artificial Intelligence was established in <span class="text-blue-400 font-semibold">2024</span>, 
+              The Department of Artificial Intelligence was established in <span
+                class="text-blue-400 font-semibold">2024</span>,
               offering B.Sc. (AI & ML) and M.Sc. (Artificial Intelligence) programs.
             </p>
             <p>
-              Our focus lies in academic excellence, applied research, and industry-oriented learning through 
+              Our focus lies in academic excellence, applied research, and industry-oriented learning through
               workshops, symposiums, and inter-college competitions.
             </p>
             <p>
-              We nurture students to become ethical AI professionals equipped with cutting-edge technical skills 
+              We nurture students to become ethical AI professionals equipped with cutting-edge technical skills
               and problem-solving abilities.
             </p>
           </div>
@@ -163,14 +191,14 @@
     <!-- VISION / MISSION / HIGHLIGHTS -->
     <section class="max-w-7xl mx-auto px-6 py-20">
       <div class="grid gap-8 md:grid-cols-3">
-        
+
         <div class="vision-card">
           <div class="card-icon bg-blue-500">
             <span class="text-3xl">🎯</span>
           </div>
           <h3 class="text-2xl font-bold mb-4">Vision</h3>
           <p class="text-slate-300">
-            To produce industry-ready AI professionals with strong ethics, innovation mindset, 
+            To produce industry-ready AI professionals with strong ethics, innovation mindset,
             and technical excellence.
           </p>
         </div>
@@ -181,7 +209,7 @@
           </div>
           <h3 class="text-2xl font-bold mb-4">Mission</h3>
           <p class="text-slate-300">
-            Hands-on learning, research excellence, industry collaboration, and holistic development 
+            Hands-on learning, research excellence, industry collaboration, and holistic development
             of future AI leaders.
           </p>
         </div>
@@ -210,7 +238,8 @@
     <!-- FACULTY -->
     <section class="max-w-7xl mx-auto px-6 py-20">
       <div class="text-center mb-16">
-        <span class="inline-block px-4 py-2 bg-purple-500/10 rounded-full text-sm text-purple-400 border border-purple-500/20 mb-4">
+        <span
+          class="inline-block px-4 py-2 bg-purple-500/10 rounded-full text-sm text-purple-400 border border-purple-500/20 mb-4">
           Our Team
         </span>
         <h2 class="text-5xl font-bold mb-4">Meet Our <span class="text-blue-500">Faculty</span></h2>
@@ -302,52 +331,54 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="relative border-t border-white/10 py-12 bg-slate-900/50 backdrop-blur">
-    <div class="max-w-7xl mx-auto px-6">
-      
-      <div class="text-center mb-8">
-        <h3 class="text-3xl font-bold mb-2">
-          AION<span class="text-blue-500">2K26</span>
+  <footer class="footer">
+    <div class="footer-container">
+
+      <div class="footer-brand">
+        <h3 class="footer-title">
+          AION<span class="footer-accent">2K26</span>
         </h3>
-        <p class="text-slate-400">State Level Technical Symposium</p>
+        <p class="footer-tagline">State Level Technical Symposium</p>
       </div>
 
-      <div class="flex flex-col sm:flex-row justify-center items-center gap-6 mb-8 text-sm text-slate-400">
-        <a href="about.html" class="hover:text-blue-400 transition">About</a>
-        <span class="hidden sm:block">•</span>
-        <a href="brochure.html" class="hover:text-blue-400 transition">Brochure</a>
-        <span class="hidden sm:block">•</span>
-        <a href="register.html" class="hover:text-blue-400 transition">Register</a>
-        <span class="hidden sm:block">•</span>
-        <a href="login.html" class="hover:text-blue-400 transition">Login</a>
+      <div class="footer-links">
+        <a href="about.html" class="footer-link">About</a>
+        <span class="footer-separator">•</span>
+        <a href="brochure.html" class="footer-link">Brochure</a>
+        <span class="footer-separator">•</span>
+        <a href="register.html" class="footer-link">Register</a>
+        <span class="footer-separator">•</span>
+        <a href="login.html" class="footer-link">Login</a>
       </div>
 
       <!-- Developer Credits -->
-      <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto mb-8">
-        <p class="text-center text-sm text-slate-400 mb-3">Developed By</p>
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 text-center">
-          <div class="group cursor-pointer">
-            <p class="font-semibold text-blue-400 group-hover:text-blue-300 transition">Jeeva Loganathan</p>
-            <p class="text-xs text-slate-500">1st M.Sc AI</p>
+      <div class="developer-credits">
+        <p class="credits-label">Developed By</p>
+        <div class="developers">
+          <div class="developer">
+            <p class="developer-name dev-primary">Jeeva Loganathan</p>
+            <p class="developer-role">1st M.Sc AI</p>
           </div>
-          <span class="text-slate-600 hidden sm:block">|</span>
-          <div class="group cursor-pointer">
-            <p class="font-semibold text-purple-400 group-hover:text-purple-300 transition">William James</p>
-            <p class="text-xs text-slate-500">1st M.Sc AI</p>
+          <span class="dev-separator">|</span>
+          <div class="developer">
+            <p class="developer-name dev-secondary">William James</p>
+            <p class="developer-role">1st M.Sc AI</p>
           </div>
         </div>
       </div>
 
-      <div class="text-center text-slate-500 text-sm">
+      <div class="footer-bottom">
         <p>© 2026 AION Symposium. All rights reserved.</p>
-        <p class="mt-2">St. Joseph's College (Autonomous), Tiruchirappalli</p>
+        <p class="footer-college">St. Joseph's College (Autonomous), Tiruchirappalli</p>
       </div>
 
     </div>
   </footer>
 
   <!-- SCRIPTS -->
+  <script src="js/landing.js"></script>
   <script src="js/about.js"></script>
 
 </body>
+
 </html>

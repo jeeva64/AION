@@ -1,0 +1,31 @@
+/* ================================================
+   NAVBAR STYLES - AION 2K26
+   Consistent across all pages
+================================================ */
+
+/* Minimal navbar enhancement */
+.nav-link {
+  position: relative;
+  color: rgba(226, 232, 240, 0.85);
+  transition: color 0.25s ease;
+}
+
+.nav-link:hover {
+  color: #60a5fa;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  transition: width 0.25s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.text-blue-400::after {
+  width: 100%;
+}

@@ -34,11 +34,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         collegeSelect.appendChild(option);
       });
       
-      // Add "Other" option at the end
-      const otherOption = document.createElement("option");
-      otherOption.value = "Other";
-      otherOption.textContent = "Other";
-      collegeSelect.appendChild(otherOption);
       
     } catch (error) {
       console.error("Error loading colleges:", error);
@@ -46,7 +41,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Fallback to hardcoded list if API fails
       collegeSelect.innerHTML = `
         <option value="">Select College</option>
-        <option>St. Joseph's College, Trichy</option>
         <option>Bishop Heber College, Trichy</option>
         <option>National College, Trichy</option>
         <option>Jamal Mohamed College, Trichy</option>
@@ -55,7 +49,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         <option>M.A.M. College of Engineering, Trichy</option>
         <option>Oxford Engineering College, Trichy</option>
         <option>Government College of Engineering, Trichy</option>
-        <option>Other</option>
       `;
       
       // Optional: Show warning (only if SweetAlert2 is loaded)
@@ -114,7 +107,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       mobilenumber: mobileEl.value.trim(),
       department: dept,
       college: collegeEl.value.trim(),
-      // collegeId: collegeId, // Uncomment if backend needs collegeId
       shift: shiftEl.value,
       password: password,
       confirmpassword: confirmPassword

@@ -1,0 +1,668 @@
+/* ================================================
+   LANDING PAGE - HERO SECTION
+   AION 2K26 - Optimized for Full Screen Laptop View
+================================================ */
+
+/* =========================
+   ANIMATIONS
+========================= */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0) scale(1); 
+  }
+  50% { 
+    transform: translateY(-30px) scale(1.05); 
+  }
+}
+
+@keyframes float-delay {
+  0%, 100% { 
+    transform: translateY(0) scale(1); 
+  }
+  50% { 
+    transform: translateY(-25px) scale(1.03); 
+  }
+}
+
+@keyframes particle-float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(var(--tx), var(--ty)) rotate(180deg);
+    opacity: 0.6;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.8));
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(5rem, 12vh, 7rem) clamp(1rem, 3vw, 1.5rem) clamp(2rem, 5vh, 3rem);
+  overflow: hidden;
+  background: radial-gradient(ellipse at top, #1e293b 0%, #0f172a 100%);
+}
+
+/* Animated Background Orbs */
+.hero-background {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(clamp(60px, 15vw, 100px));
+  opacity: 0.4;
+  will-change: transform;
+}
+
+.hero-orb-1 {
+  width: clamp(300px, 50vw, 600px);
+  height: clamp(300px, 50vw, 600px);
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  top: -10%;
+  left: -10%;
+  animation: float 10s ease-in-out infinite;
+}
+
+.hero-orb-2 {
+  width: clamp(250px, 40vw, 500px);
+  height: clamp(250px, 40vw, 500px);
+  background: linear-gradient(135deg, #10B981 0%, #06B6D4 100%);
+  bottom: -10%;
+  right: -10%;
+  animation: float-delay 12s ease-in-out infinite;
+}
+
+.hero-orb-3 {
+  width: clamp(200px, 35vw, 450px);
+  height: clamp(200px, 35vw, 450px);
+  background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: float 8s ease-in-out infinite 2s;
+}
+
+/* Particles */
+.particles-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: clamp(4px, 1vw, 8px);
+  height: clamp(4px, 1vw, 8px);
+  background: radial-gradient(circle, #60A5FA 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+.particle-1 {
+  --tx: 50px;
+  --ty: -80px;
+  top: 20%;
+  left: 15%;
+  animation: particle-float 8s ease-in-out infinite;
+}
+
+.particle-2 {
+  --tx: -60px;
+  --ty: 70px;
+  top: 40%;
+  right: 20%;
+  animation: particle-float 10s ease-in-out infinite 1s;
+}
+
+.particle-3 {
+  --tx: 40px;
+  --ty: -60px;
+  bottom: 30%;
+  left: 25%;
+  animation: particle-float 9s ease-in-out infinite 2s;
+}
+
+.particle-4 {
+  --tx: -50px;
+  --ty: 80px;
+  top: 60%;
+  right: 15%;
+  animation: particle-float 11s ease-in-out infinite 3s;
+}
+
+.particle-5 {
+  --tx: 70px;
+  --ty: -50px;
+  bottom: 20%;
+  left: 40%;
+  animation: particle-float 7s ease-in-out infinite 1.5s;
+}
+
+.particle-6 {
+  --tx: -40px;
+  --ty: 60px;
+  top: 70%;
+  right: 35%;
+  animation: particle-float 9s ease-in-out infinite 2.5s;
+}
+
+/* =========================
+   HERO CONTENT - OPTIMIZED SPACING
+========================= */
+.hero-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 1.5rem);
+}
+
+.hero-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 1.8vh, 1.5rem);
+  width: 100%;
+}
+
+/* College Header - Compact */
+.college-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 1.8vw, 1.15rem);
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@media (min-width: 1024px) {
+  .college-header {
+    flex-direction: row;
+  }
+}
+
+.college-logo {
+  width: clamp(4.5rem, 9vw, 6rem);
+  height: clamp(4.5rem, 9vw, 6rem);
+  object-fit: contain;
+  animation: glow 3s ease-in-out infinite;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.college-logo:hover {
+  transform: scale(1.08) rotate(5deg);
+}
+
+.college-info {
+  text-align: center;
+}
+
+.college-dept {
+  font-size: clamp(0.656rem, 1.2vw, 0.75rem);
+  color: #60A5FA;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  margin-bottom: 0.125rem;
+  line-height: 1.25;
+}
+
+.college-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(0.938rem, 2vw, 1.25rem);
+  font-weight: 800;
+  color: white;
+  margin-bottom: 0.125rem;
+  line-height: 1.2;
+}
+
+.college-affiliation {
+  font-size: clamp(0.656rem, 1.2vw, 0.75rem);
+  color: rgba(148, 163, 184, 0.9);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+/* Hero Badge - Compact */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: clamp(0.375rem, 1vh, 0.5rem) clamp(0.875rem, 2.2vw, 1.15rem);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(59, 130, 246, 0.2);
+  border-radius: 9999px;
+  font-size: clamp(0.719rem, 1.25vw, 0.813rem);
+  font-weight: 600;
+  color: #93C5FD;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+  animation: fadeInUp 0.8s ease-out 0.2s backwards;
+}
+
+.pulse-indicator {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulse-ring {
+  position: absolute;
+  width: clamp(0.85rem, 1.6vw, 1rem);
+  height: clamp(0.85rem, 1.6vw, 1rem);
+  border: 2px solid #60A5FA;
+  border-radius: 50%;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+.pulse-dot {
+  width: clamp(0.425rem, 0.8vw, 0.5rem);
+  height: clamp(0.425rem, 0.8vw, 0.5rem);
+  background: #60A5FA;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(96, 165, 250, 0.6);
+}
+
+/* Main Title Container - Optimized Size */
+.hero-title-container {
+  animation: fadeInUp 0.8s ease-out 0.3s backwards;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* AION Logo Image - Perfect Size for Laptop */
+.hero-title-image {
+  width: clamp(220px, 38vw, 480px);
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 26px rgba(59, 130, 246, 0.4));
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-title-image:hover {
+  filter: drop-shadow(0 10px 38px rgba(59, 130, 246, 0.6));
+  transform: scale(1.015);
+}
+
+/* Hero Subtitle & Tagline - Compact */
+.hero-subtitle {
+  font-size: clamp(0.875rem, 1.75vw, 1.063rem);
+  color: rgba(226, 232, 240, 0.95);
+  font-weight: 500;
+  line-height: 1.45;
+  animation: fadeInUp 0.8s ease-out 0.4s backwards;
+  text-align: center;
+  margin: 0;
+}
+
+.hero-tagline {
+  max-width: 40rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.highlight-text {
+  display: block;
+  margin-top: 0.125rem;
+  font-weight: 700;
+  font-size: clamp(0.938rem, 1.95vw, 1.125rem);
+  background: linear-gradient(135deg, #60A5FA, #A78BFA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.3;
+}
+
+/* Date Badge - Compact */
+.date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  animation: fadeInUp 0.8s ease-out 0.5s backwards;
+}
+
+.date-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  color: #60A5FA;
+  flex-shrink: 0;
+}
+
+.date-text,
+.date-day,
+.date-separator {
+  font-size: 0.8rem;
+}
+
+.date-text {
+  font-weight: 600;
+  color: white;
+}
+
+.date-separator {
+  color: rgba(148, 163, 184, 0.6);
+}
+
+.date-day {
+  color: rgba(226, 232, 240, 0.85);
+}
+
+/* =========================
+   STATS GRID - Compact
+========================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(0.875rem, 2.2vw, 1.25rem);
+  max-width: 52rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: clamp(0.875rem, 1.8vw, 1.25rem);
+  padding: 1.2rem 1.1rem;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.stat-card-1 {
+  animation: fadeInUp 0.8s ease-out 0.6s backwards;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.stat-card-1:hover {
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+.stat-card-2 {
+  animation: fadeInUp 0.8s ease-out 0.7s backwards;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.stat-card-2:hover {
+  border-color: rgba(16, 185, 129, 0.6);
+}
+
+.stat-card-3 {
+  animation: fadeInUp 0.8s ease-out 0.8s backwards;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.stat-card-3:hover {
+  border-color: rgba(245, 158, 11, 0.6);
+}
+
+.stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.35rem;
+}
+
+.stat-value-blue {
+  color: #60A5FA;
+}
+
+.stat-value-green {
+  color: #34D399;
+}
+
+.stat-value-yellow {
+  color: #FBBF24;
+}
+
+.stat-label {
+  font-size: 0.82rem;
+  color: rgba(148, 163, 184, 0.9);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* =========================
+   CTA BUTTONS - Compact
+========================= */
+.cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  animation: fadeInUp 0.8s ease-out 0.9s backwards;
+}
+
+.cta-button-primary {
+  position: relative;
+  padding: 0.7rem 1.8rem;
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  color: white;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+  display: inline-block;
+}
+
+.cta-button-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.5);
+}
+
+.cta-button-primary:active {
+  transform: translateY(-1px);
+}
+
+.cta-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cta-button-primary:hover .cta-gradient {
+  opacity: 1;
+}
+
+.cta-text {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-button-secondary {
+  padding: 0.7rem 1.8rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: inline-block;
+}
+
+.cta-button-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================
+   RESPONSIVE ADJUSTMENTS
+========================= */
+
+/* Tablet adjustments */
+@media (max-width: 768px) {
+  .hero-stack {
+    gap: clamp(1.25rem, 2.5vh, 1.75rem);
+  }
+  
+  .college-logo {
+    width: clamp(5rem, 14vw, 6.5rem);
+    height: clamp(5rem, 14vw, 6.5rem);
+  }
+  
+  .hero-title-image {
+    width: clamp(260px, 55vw, 420px);
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 4.5rem 1rem 2.25rem;
+  }
+  
+  .hero-stack {
+    gap: 1.5rem;
+  }
+  
+  .college-header {
+    gap: 1rem;
+  }
+  
+  .college-logo {
+    width: clamp(4.5rem, 18vw, 5.5rem);
+    height: clamp(4.5rem, 18vw, 5.5rem);
+  }
+  
+  .hero-title-image {
+    width: clamp(220px, 75vw, 300px);
+  }
+  
+  .hero-orb-1,
+  .hero-orb-2,
+  .hero-orb-3 {
+    filter: blur(50px);
+  }
+  
+  .date-badge {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.7rem 1rem;
+  }
+  
+  .date-separator {
+    display: none;
+  }
+  
+  .stats-grid {
+    gap: 1rem;
+  }
+  
+  .stat-card {
+    padding: 1.25rem;
+  }
+}
+
+/* =========================
+   ACCESSIBILITY
+========================= */
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus states */
+.cta-button-primary:focus-visible,
+.cta-button-secondary:focus-visible {
+  outline: 2px solid #60A5FA;
+  outline-offset: 4px;
+  border-radius: 9999px;
+}
+
+/* Improve performance */
+.hero-content > * {
+  will-change: transform, opacity;
+}
+
+/* Print styles */
+@media print {
+  .hero-background,
+  .particles-container {
+    display: none;
+  }
+}
