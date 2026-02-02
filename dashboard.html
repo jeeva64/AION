@@ -6,14 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <title>Registration | AION 2K26</title>
+  <title>Dashboard | AION 2K26</title>
   <link rel="shortcut icon" href="Images/favicon.png" type="image/x-icon">
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   <!-- STYLES -->
   <link rel="stylesheet" href="CSS/global.css">
   <link rel="stylesheet" href="CSS/navbar.css">
@@ -183,7 +183,7 @@
 
     <div class="text-center mb-8">
       <h1 class="text-5xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
-        Team Leader Dashboard
+        Student Co-ordinator Dashboard
       </h1>
       <p class="text-slate-600 text-lg">Manage your team registrations and event schedules</p>
     </div>
@@ -252,7 +252,7 @@
 
     <!-- REGISTERED TEAMS TABLE -->
     <div class="glass-card rounded-2xl shadow-lg p-6">
-      <h2 class="text-3xl font-bold mb-6 text-center">Registered Teams</h2>
+      <h2 class="text-3xl font-bold mb-6 text-center">Registered Members</h2>
 
       <div class="overflow-x-auto">
         <table class="min-w-full border-collapse text-sm" id="registeredTable">
@@ -291,7 +291,7 @@
             <label class="block text-sm font-semibold mb-2 text-slate-700">Degree *</label>
             <select id="degree"
               class="w-full border-2 border-slate-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
-              <option value="">Select Degree</option>
+              <option value="">Select Degree: </option>
               <option value="ug">UG</option>
               <option value="pg">PG</option>
             </select>
@@ -311,7 +311,7 @@
         <div class="text-center">
           <button id="submitBtn"
             class="action-btn bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-            Register Team
+            Register
           </button>
         </div>
       </div>
@@ -320,13 +320,12 @@
   </div>
 
   <!-- FOOTER -->
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-container">
 
       <div class="footer-brand">
         <h3 class="footer-title">
-          AION<span class="footer-accent">2K26</span>
+          AION<span class="footer-accent"> 2K26</span>
         </h3>
         <p class="footer-tagline">State Level Technical Symposium</p>
       </div>
@@ -346,16 +345,28 @@
         <p class="credits-label">Developed By</p>
         <div class="developers">
           <div class="developer">
-            <p class="developer-name dev-primary">Jeeva Loganathan</p>
+            <p class="developer-name dev-primary">
+              <a href="https://www.linkedin.com/in/jeeva-l/" target="_blank" rel="noopener noreferrer">
+                Jeeva Loganathan
+              </a>
+            </p>
             <p class="developer-role">1st M.Sc AI</p>
           </div>
+
           <span class="dev-separator">|</span>
+
           <div class="developer">
-            <p class="developer-name dev-secondary">William James</p>
+            <p class="developer-name dev-secondary">
+              <a href="https://www.linkedin.com/in/william-james-a-10b126300/" target="_blank"
+                rel="noopener noreferrer">
+                William James
+              </a>
+            </p>
             <p class="developer-role">1st M.Sc AI</p>
           </div>
         </div>
       </div>
+
 
       <div class="footer-bottom">
         <p>© 2026 AION Symposium. All rights reserved.</p>
@@ -365,7 +376,7 @@
     </div>
   </footer>
 
-   <!-- SCRIPTS -->
+  <!-- SCRIPTS -->
   <script src="js/landing.js"></script>
   <script src="js/eventTableAPI.js"></script>
 

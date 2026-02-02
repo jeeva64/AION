@@ -190,3 +190,9 @@
     padding: 1.5rem;
   }
 }
+
+/* ORGANIZER CARDS – EQUAL WIDTH FIX */
+.organizer-card {
+  width: 100%;
+  max-width: 320px;
+}

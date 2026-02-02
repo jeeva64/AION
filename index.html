@@ -67,61 +67,59 @@
   <link rel="stylesheet" href="CSS/navbar.css">
   <link rel="stylesheet" href="CSS/landing.css">
   <link rel="stylesheet" href="CSS/homeEvents.css">
+  <link rel="stylesheet" href="CSS/admin.css">
   <link rel="stylesheet" href="CSS/footer.css">
 </head>
 
 <body class="bg-slate-950 text-white overflow-x-hidden">
 
- <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/10">
-  <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/10">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
 
-    <!-- LOGO -->
-    <a href="/" class="flex items-center gap-1 text-xl font-extrabold tracking-tight">
-      <span class="text-white">AION</span>
-      <span class="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-        2K26
-      </span>
-    </a>
+      <!-- LOGO -->
+      <a href="/" class="flex items-center gap-1 text-xl font-extrabold tracking-tight">
+        <span class="text-white">AION</span>
+        <span class="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+          2K26
+        </span>
+      </a>
 
-    <!-- DESKTOP MENU -->
-    <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-      <a href="/" class="nav-link">Home</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="brochure.html" class="nav-link">Brochure</a>
-      <a href="login.html" class="nav-link">Login</a>
+      <!-- DESKTOP MENU -->
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <a href="/" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="brochure.html" class="nav-link">Brochure</a>
+        <a href="login.html" class="nav-link">Login</a>
 
-      <a href="register.html"
-        class="ml-2 px-4 py-1.5 rounded-full text-sm font-semibold
+        <a href="register.html" class="ml-2 px-4 py-1.5 rounded-full text-sm font-semibold
                bg-blue-600 hover:bg-blue-700 transition shadow-md">
+          Register
+        </a>
+      </div>
+
+      <!-- MOBILE TOGGLE -->
+      <button id="menuBtn" class="md:hidden text-white focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- MOBILE MENU -->
+    <div id="mobileMenu"
+      class="hidden md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-white/10 px-6 py-5 space-y-4">
+
+      <a href="/" class="block text-white font-semibold hover:text-blue-400">Home</a>
+      <a href="about.html" class="block text-white font-semibold hover:text-blue-400">About</a>
+      <a href="brochure.html" class="block text-white font-semibold hover:text-blue-400">Brochure</a>
+      <a href="login.html" class="block text-white font-semibold hover:text-blue-400">Login</a>
+
+      <a href="register.html" class="block text-white text-center mt-3 py-2 rounded-full
+              bg-blue-600 hover:bg-blue-700 transition font-semibold">
         Register
       </a>
     </div>
-
-    <!-- MOBILE TOGGLE -->
-    <button id="menuBtn" class="md:hidden text-white focus:outline-none">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
-  </div>
-
-  <!-- MOBILE MENU -->
-  <div id="mobileMenu"
-       class="hidden md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-white/10 px-6 py-5 space-y-4">
-
-    <a href="/" class="block text-blue-400 font-semibold">Home</a>
-    <a href="about.html" class="block hover:text-blue-400">About</a>
-    <a href="brochure.html" class="block hover:text-blue-400">Brochure</a>
-    <a href="login.html" class="block hover:text-blue-400">Login</a>
-
-    <a href="register.html"
-       class="block text-center mt-3 py-2 rounded-full
-              bg-blue-600 hover:bg-blue-700 transition font-semibold">
-      Register
-    </a>
-  </div>
-</nav>
+  </nav>
 
   <!-- HERO SECTION -->
   <section class="hero-section">
@@ -146,80 +144,80 @@
     <div class="hero-content">
       <div class="hero-stack">
 
-      <!-- College Header (unchanged) -->
-      <div class="college-header">
-        <img src="/Images/CLG LOGO.png" class="college-logo" alt="College Logo" />
+        <!-- College Header (unchanged) -->
+        <div class="college-header">
+          <img src="/Images/CLG LOGO.png" class="college-logo" alt="College Logo" />
 
-        <div class="college-info">
-          <p class="college-dept">Department of Artificial Intelligence & Machine Learning</p>
-          <h1 class="college-name">St. Joseph's College (Autonomous)</h1>
-          <p class="college-affiliation">
-            Affiliated to Bharathidasan University, Tiruchirappalli
-          </p>
+          <div class="college-info">
+            <p class="college-dept">Department of Artificial Intelligence</p>
+            <h1 class="college-name">St. Joseph's College (Autonomous)</h1>
+            <p class="college-affiliation">
+              Affiliated to Bharathidasan University, Tiruchirappalli
+            </p>
+          </div>
+
+          <img src="/Images/ASSO LOGO.png" class="college-logo" alt="Department Logo" />
         </div>
 
-        <img src="/Images/ASSO LOGO.png" class="college-logo" alt="Department Logo" />
-      </div>
-
-      <!-- Badge --> 
-      <div class="hero-badge"> 
-        <span class="pulse-indicator"> 
-          <span class="pulse-ring"></span> 
-          <span class="pulse-dot"></span> 
-        </span> Proudly Presents 
-      </div>
-
-      <!-- Main Logo -->
-      <div class="hero-title-container">
-        <img src="/Images/logo.png" alt="AION 2K26" class="hero-title-image" />
-      </div>
-
-      <!-- Strong Value Proposition (NEW) -->
-      <p class="hero-subtitle hero-tagline">
-        A State-Level Inter-Collegiate Symposium
-        <span class="highlight-text">where AI meets Innovation</span>
-      </p>
-
-      <!-- Date + Location -->
-      <div class="date-badge">
-        <svg class="date-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <span class="date-text">February 13, 2026</span>
-        <span class="date-separator">|</span>
-        <span class="date-day">Friday • Sail Auditroium</span>
-      </div>
-
-      <!-- Stats (Moved UP for Trust) -->
-      <div class="stats-grid">
-        <div class="stat-card stat-card-1">
-          <div class="stat-value stat-value-blue">8</div>
-          <div class="stat-label">Competitive Events</div>
+        <!-- Badge -->
+        <div class="hero-badge">
+          <span class="pulse-indicator">
+            <span class="pulse-ring"></span>
+            <span class="pulse-dot"></span>
+          </span> Proudly Presents
         </div>
 
-        <div class="stat-card stat-card-2">
-          <div class="stat-value stat-value-green">₹200</div>
-          <div class="stat-label">Entry Fee</div>
+        <!-- Main Logo -->
+        <div class="hero-title-container">
+          <img src="/Images/logo.png" alt="AION 2K26" class="hero-title-image" />
         </div>
 
-        <div class="stat-card stat-card-3">
-          <div class="stat-value stat-value-yellow">1 Day</div>
-          <div class="stat-label">Power-Packed Experience</div>
+        <!-- Strong Value Proposition (NEW) -->
+        <p class="hero-subtitle hero-tagline">
+          A State Level Technical Symposium
+          <span class="highlight-text">where AI meets Innovation</span>
+        </p>
+
+        <!-- Date + Location -->
+        <div class="date-badge">
+          <svg class="date-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span class="date-text">February 13, 2026</span>
+          <span class="date-separator">|</span>
+          <span class="date-day">Friday @ Sail Hall, Arrupe Library Building</span>
         </div>
-      </div>
 
-      <!-- CTA (Primary Focus) -->
-      <div class="cta-group">
-        <a href="register.html" class="cta-button-primary">
-          <span class="cta-text">Register Now</span>
-          <div class="cta-gradient"></div>
-        </a>
+        <!-- Stats (Moved UP for Trust) -->
+        <div class="stats-grid">
+          <div class="stat-card stat-card-1">
+            <div class="stat-value stat-value-blue">8</div>
+            <div class="stat-label">Events</div>
+          </div>
 
-        <a href="brochure.html" class="cta-button-secondary">
-          View Brochure
-        </a>
-      </div>
+          <div class="stat-card stat-card-2">
+            <div class="stat-value stat-value-green">₹200</div>
+            <div class="stat-label">Entry Fee</div>
+          </div>
+
+          <div class="stat-card stat-card-3">
+            <div class="stat-value stat-value-yellow">1 Day</div>
+            <div class="stat-label">Power-Packed Experience</div>
+          </div>
+        </div>
+
+        <!-- CTA (Primary Focus) -->
+        <div class="cta-group">
+          <a href="register.html" class="cta-button-primary">
+            <span class="cta-text">Register Now</span>
+            <div class="cta-gradient"></div>
+          </a>
+
+          <a href="brochure.html" class="cta-button-secondary">
+            View Brochure
+          </a>
+        </div>
       </div>
     </div>
 
@@ -335,6 +333,82 @@
     </div>
 
   </section>
+  
+  <!-- AION 2K26 Developer & System Admin Section -->
+  <section class="aion-dev-section" id="developer-system-admin">
+    <div class="aion-bg-grid"></div>
+    <div class="aion-bg-gradient"></div>
+
+    <div class="aion-dev-container">
+      <h2 class="aion-section-title">Developer & System Admin</h2>
+      <p class="aion-section-subtitle">Technical Team • AION 2K26</p>
+
+      <div class="aion-cards-grid">
+        <!-- Jeeva Loganathan -->
+        <div class="aion-team-card">
+          <div class="aion-card-glow"></div>
+          <div class="aion-corner-accent aion-corner-tl"></div>
+          <div class="aion-corner-accent aion-corner-br"></div>
+
+          <div class="aion-card-header">
+            <h3 class="aion-name">
+              <a href="https://www.linkedin.com/in/jeeva-l/" target="_blank" rel="noopener noreferrer">
+                Jeeva Loganathan
+              </a>
+            </h3>
+            <p class="aion-degree">M.Sc Artificial Intelligence</p>
+          </div>
+
+          <div class="aion-divider"></div>
+
+          <div class="aion-contact-info">
+            <div class="aion-contact-item">
+              <div class="aion-contact-icon">📱</div>
+              <div class="aion-contact-details">
+                <div class="aion-contact-label">Phone</div>
+                <div class="aion-contact-value">
+                  <a href="tel:+919976578892">+91 99765 78892</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- William James A -->
+        <div class="aion-team-card">
+          <div class="aion-card-glow"></div>
+          <div class="aion-corner-accent aion-corner-tl"></div>
+          <div class="aion-corner-accent aion-corner-br"></div>
+
+          <div class="aion-card-header">
+            <h3 class="aion-name">
+              <a href="https://www.linkedin.com/in/william-james-a-10b126300/" target="_blank"
+                rel="noopener noreferrer">
+                William James A
+              </a>
+            </h3>
+            <p class="aion-degree">M.Sc Artificial Intelligence</p>
+          </div>
+
+          <div class="aion-divider"></div>
+
+          <div class="aion-contact-info">
+            <div class="aion-contact-item">
+              <div class="aion-contact-icon">📱</div>
+              <div class="aion-contact-details">
+                <div class="aion-contact-label">Phone</div>
+                <div class="aion-contact-value">
+                  <a href="tel:+918056560315">+91 80565 60315</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End AION 2K26 Developer & System Admin Section -->
+
 
   <!-- FOOTER -->
   <footer class="footer">
@@ -362,16 +436,28 @@
         <p class="credits-label">Developed By</p>
         <div class="developers">
           <div class="developer">
-            <p class="developer-name dev-primary">Jeeva Loganathan</p>
+            <p class="developer-name dev-primary">
+              <a href="https://www.linkedin.com/in/jeeva-l/" target="_blank" rel="noopener noreferrer">
+                Jeeva Loganathan
+              </a>
+            </p>
             <p class="developer-role">1st M.Sc AI</p>
           </div>
+
           <span class="dev-separator">|</span>
+
           <div class="developer">
-            <p class="developer-name dev-secondary">William James</p>
+            <p class="developer-name dev-secondary">
+              <a href="https://www.linkedin.com/in/william-james-a-10b126300/" target="_blank"
+                rel="noopener noreferrer">
+                William James
+              </a>
+            </p>
             <p class="developer-role">1st M.Sc AI</p>
           </div>
         </div>
       </div>
+
 
       <div class="footer-bottom">
         <p>© 2026 AION Symposium. All rights reserved.</p>

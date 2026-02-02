@@ -16,9 +16,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <!-- STYLES -->
-   <link rel="stylesheet" href="CSS/about.css">
+  <link rel="stylesheet" href="CSS/about.css">
   <link rel="stylesheet" href="CSS/global.css">
   <link rel="stylesheet" href="CSS/navbar.css">
+  <link rel="stylesheet" href="CSS/admin.css">
   <link rel="stylesheet" href="CSS/footer.css">
 </head>
 
@@ -60,12 +61,12 @@
     <div id="mobileMenu"
       class="hidden md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-white/10 px-6 py-5 space-y-4">
 
-      <a href="/" class="block text-blue-400 font-semibold">Home</a>
-      <a href="about.html" class="block hover:text-blue-400">About</a>
-      <a href="brochure.html" class="block hover:text-blue-400">Brochure</a>
-      <a href="login.html" class="block hover:text-blue-400">Login</a>
+      <a href="/" class="block text-white font-semibold hover:text-blue-400">Home</a>
+      <a href="about.html" class="block text-white font-semibold hover:text-blue-400">About</a>
+      <a href="brochure.html" class="block text-white font-semibold hover:text-blue-400">Brochure</a>
+      <a href="login.html" class="block text-white font-semibold hover:text-blue-400">Login</a>
 
-      <a href="register.html" class="block text-center mt-3 py-2 rounded-full
+      <a href="register.html" class="block text-white text-center mt-3 py-2 rounded-full
               bg-blue-600 hover:bg-blue-700 transition font-semibold">
         Register
       </a>
@@ -235,6 +236,49 @@
       </div>
     </section>
 
+    <!-- SYMPOSIUM LEADERSHIP -->
+    <section class="max-w-7xl mx-auto px-6 py-20">
+      <div class="text-center mb-16">
+        <span
+          class="inline-block px-4 py-2 bg-blue-500/10 rounded-full text-sm text-blue-400 border border-blue-500/20 mb-4">
+          Symposium Leadership
+        </span>
+        <h2 class="text-5xl font-bold mb-4">
+          Organizing <span class="text-purple-500">Committee</span>
+        </h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+          Student leaders driving the vision and execution of AION 2K26
+        </p>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 place-items-center">
+
+        <!-- Chairman -->
+        <div class="glass-card rounded-2xl p-6 text-center">
+          <h4 class="text-xl font-bold text-blue-400 mb-2">Chairman</h4>
+          <p class="text-lg font-semibold">Nandakumaaran N I</p>
+          <p class="text-slate-400 text-sm mb-2">I M.Sc Artificial Intelligence</p>
+          <a class="text-slate-300 text-sm" href="tel:9080186740">📞 +91 90801 86740</a>
+        </div>
+
+        <!-- Secretary -->
+        <div class="glass-card rounded-2xl p-6 text-center">
+          <h4 class="text-xl font-bold text-blue-400 mb-2">Secretary</h4>
+          <p class="text-lg font-semibold">Shri Harish V M</p>
+          <p class="text-slate-400 text-sm mb-2">I M.Sc Artificial Intelligence</p>
+          <a class="text-slate-300 text-sm" href="tel:9443229919">📞 +91 94432 29919</a>
+        </div>
+
+        <!-- Secretary -->
+        <div class="glass-card rounded-2xl p-6 text-center">
+          <h4 class="text-xl font-bold text-blue-400 mb-2">Secretary</h4>
+          <p class="text-lg font-semibold">Vijayalaxmi K</p>
+          <p class="text-slate-400 text-sm mb-2">II B.Sc AI & ML</p>
+        </div>
+      </div>
+    </section>
+
+
     <!-- FACULTY -->
     <section class="max-w-7xl mx-auto px-6 py-20">
       <div class="text-center mb-16">
@@ -259,22 +303,22 @@
             </div>
           </div>
           <div class="faculty-info">
-            <h4 class="text-xl font-bold mb-1">Mr. A Charles</h4>
+            <h4 class="text-xl font-bold mb-1">Mr. A. Charles</h4>
             <p class="text-blue-400 text-sm mb-2">Head of Department</p>
-            <p class="text-slate-400 text-xs">M.Sc., PGDCA, M.Phil.</p>
+            <p class="text-slate-400 text-xs">M.Sc., PGDCA, M.Phil.,</p>
           </div>
         </div>
 
         <!-- Dr. Mani -->
         <div class="faculty-card">
           <div class="faculty-image-wrapper">
-            <img src="/static/faculty/faculty3.jpg" alt="Dr. Mani">
+            <img src="/static/faculty/faculty3.jpg" alt="Mr. K. Mani">
             <div class="faculty-overlay">
               <span class="text-xs bg-purple-500 px-3 py-1 rounded-full">Assistant Professor</span>
             </div>
           </div>
           <div class="faculty-info">
-            <h4 class="text-xl font-bold mb-1">Dr. Mani</h4>
+            <h4 class="text-xl font-bold mb-1">Mr. K. Mani</h4>
             <p class="text-purple-400 text-sm mb-2">Assistant Professor</p>
             <p class="text-slate-400 text-xs">Degree will be updated</p>
           </div>
@@ -291,7 +335,7 @@
           <div class="faculty-info">
             <h4 class="text-xl font-bold mb-1">Mr. C. Mohanraja</h4>
             <p class="text-purple-400 text-sm mb-2">Assistant Professor</p>
-            <p class="text-slate-400 text-xs">Degree will be updated</p>
+            <p class="text-slate-400 text-xs">M.Sc., M.Sc(M)., M.Tech., MBA., M.Phil.,</p>
           </div>
         </div>
 
@@ -313,13 +357,13 @@
         <!-- Dr. Jesu Doss -->
         <div class="faculty-card">
           <div class="faculty-image-wrapper">
-            <img src="/Images/jesu_sir.jpg" alt="Dr. Jesu Doss">
+            <img src="/Images/jesu_sir.jpg" alt="Mr. M. Jesu Doss">
             <div class="faculty-overlay">
               <span class="text-xs bg-purple-500 px-3 py-1 rounded-full">Assistant Professor</span>
             </div>
           </div>
           <div class="faculty-info">
-            <h4 class="text-xl font-bold mb-1">Dr. Jesu Doss</h4>
+            <h4 class="text-xl font-bold mb-1">Mr. M. Jesu Doss</h4>
             <p class="text-purple-400 text-sm mb-2">Assistant Professor</p>
             <p class="text-slate-400 text-xs">Degree will be updated</p>
           </div>
@@ -330,13 +374,88 @@
 
   </main>
 
+  <!-- AION 2K26 Developer & System Admin Section -->
+  <section class="aion-dev-section" id="developer-system-admin">
+    <div class="aion-bg-grid"></div>
+    <div class="aion-bg-gradient"></div>
+
+    <div class="aion-dev-container">
+      <h2 class="aion-section-title">Developer & System Admin</h2>
+      <p class="aion-section-subtitle">Technical Team • AION 2K26</p>
+
+      <div class="aion-cards-grid">
+        <!-- Jeeva Loganathan -->
+        <div class="aion-team-card">
+          <div class="aion-card-glow"></div>
+          <div class="aion-corner-accent aion-corner-tl"></div>
+          <div class="aion-corner-accent aion-corner-br"></div>
+
+          <div class="aion-card-header">
+            <h3 class="aion-name">
+              <a href="https://www.linkedin.com/in/jeeva-l/" target="_blank" rel="noopener noreferrer">
+                Jeeva Loganathan
+              </a>
+            </h3>
+            <p class="aion-degree">M.Sc Artificial Intelligence</p>
+          </div>
+
+          <div class="aion-divider"></div>
+
+          <div class="aion-contact-info">
+            <div class="aion-contact-item">
+              <div class="aion-contact-icon">📱</div>
+              <div class="aion-contact-details">
+                <div class="aion-contact-label">Phone</div>
+                <div class="aion-contact-value">
+                  <a href="tel:+919976578892">+91 99765 78892</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- William James A -->
+        <div class="aion-team-card">
+          <div class="aion-card-glow"></div>
+          <div class="aion-corner-accent aion-corner-tl"></div>
+          <div class="aion-corner-accent aion-corner-br"></div>
+
+          <div class="aion-card-header">
+            <h3 class="aion-name">
+              <a href="https://www.linkedin.com/in/william-james-a-10b126300/" target="_blank"
+                rel="noopener noreferrer">
+                William James A
+              </a>
+            </h3>
+            <p class="aion-degree">M.Sc Artificial Intelligence</p>
+          </div>
+
+          <div class="aion-divider"></div>
+
+          <div class="aion-contact-info">
+            <div class="aion-contact-item">
+              <div class="aion-contact-icon">📱</div>
+              <div class="aion-contact-details">
+                <div class="aion-contact-label">Phone</div>
+                <div class="aion-contact-value">
+                  <a href="tel:+918056560315">+91 80565 60315</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End AION 2K26 Developer & System Admin Section -->
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-container">
 
       <div class="footer-brand">
         <h3 class="footer-title">
-          AION<span class="footer-accent">2K26</span>
+          AION<span class="footer-accent"> 2K26</span>
         </h3>
         <p class="footer-tagline">State Level Technical Symposium</p>
       </div>
@@ -356,16 +475,28 @@
         <p class="credits-label">Developed By</p>
         <div class="developers">
           <div class="developer">
-            <p class="developer-name dev-primary">Jeeva Loganathan</p>
+            <p class="developer-name dev-primary">
+              <a href="https://www.linkedin.com/in/jeeva-l/" target="_blank" rel="noopener noreferrer">
+                Jeeva Loganathan
+              </a>
+            </p>
             <p class="developer-role">1st M.Sc AI</p>
           </div>
+
           <span class="dev-separator">|</span>
+
           <div class="developer">
-            <p class="developer-name dev-secondary">William James</p>
+            <p class="developer-name dev-secondary">
+              <a href="https://www.linkedin.com/in/william-james-a-10b126300/" target="_blank"
+                rel="noopener noreferrer">
+                William James
+              </a>
+            </p>
             <p class="developer-role">1st M.Sc AI</p>
           </div>
         </div>
       </div>
+
 
       <div class="footer-bottom">
         <p>© 2026 AION Symposium. All rights reserved.</p>
