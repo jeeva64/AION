@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="CSS/footer.css">
 </head>
 
-<body class="bg-slate-50 text-slate-900 font-sans">
+<body class="bg-slate-950 text-white overflow-x-hidden">
 
   <!-- NAVBAR -->
   <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/10">
@@ -43,7 +43,7 @@
         <a href="brochure.html" class="nav-link">Brochure</a>
         <a href="login.html" class="nav-link">Login</a>
 
-        <a href="register.html" class="ml-2 px-4 py-1.5 rounded-full text-sm font-semibold
+        <a href="register.html" class="text-white ml-2 px-4 py-1.5 rounded-full text-sm font-semibold
                bg-blue-600 hover:bg-blue-700 transition shadow-md">
           Register
         </a>
@@ -61,12 +61,12 @@
     <div id="mobileMenu"
       class="hidden md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-white/10 px-6 py-5 space-y-4">
 
-      <a href="/" class="block text-blue-400 font-semibold">Home</a>
-      <a href="about.html" class="block hover:text-blue-400">About</a>
-      <a href="brochure.html" class="block hover:text-blue-400">Brochure</a>
-      <a href="login.html" class="block hover:text-blue-400">Login</a>
+      <a href="/" class="block text-white font-semibold hover:text-blue-400">Home</a>
+      <a href="about.html" class="block text-white font-semibold hover:text-blue-400">About</a>
+      <a href="brochure.html" class="block text-white font-semibold hover:text-blue-400">Brochure</a>
+      <a href="login.html" class="block text-white font-semibold hover:text-blue-400">Login</a>
 
-      <a href="register.html" class="block text-center mt-3 py-2 rounded-full
+      <a href="register.html" class="block text-white text-center mt-3 py-2 rounded-full
               bg-blue-600 hover:bg-blue-700 transition font-semibold">
         Register
       </a>
@@ -94,15 +94,70 @@
     </div>
 
     <!-- PAGE CONTENT SLOT -->
-    <div class="hero-content">
-      <!-- 
-      Put page-specific content here:
-      - Login form
-      - Register form
-      - Dashboard cards
-      - Brochure embed
-    -->
+    <div class="hero-content relative z-10 flex items-center justify-center ">
+      <div class="max-w-5xl w-full">
+
+        <!-- TITLE -->
+        <div class="text-center mb-6">
+          <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
+            AION <span class="gradient-text">2K26</span> Resources
+          </h1>
+          <p class="text-slate-300 max-w-2xl mx-auto">
+            View the official invitation and download symposium rules and event schedule
+          </p>
+        </div>
+
+        <!-- CONTENT GRID -->
+        <div class="grid gap-10 md:grid-cols-2 items-start">
+
+          <!-- INVITATION PREVIEW -->
+          <div class="glass-card rounded-2xl p-6 text-center">
+            <h3 class="text-2xl font-bold mb-4">🎫 Invitation</h3>
+
+            <div class="rounded-xl overflow-hidden border border-white/10 mb-6">
+              <img src="Images/AION2K26-Invitation.jpg" alt="AION 2K26 Invitation"
+                class="w-full object-cover hover:scale-105 transition duration-300">
+            </div>
+
+            <a href="Files/invitation.jpeg" download class="inline-block px-6 py-2 rounded-full font-semibold
+                  bg-purple-600 hover:bg-purple-700 transition shadow-md">
+              ⬇ Download Invitation
+            </a>
+          </div>
+
+          <!-- DOWNLOADS -->
+          <div class="glass-card rounded-2xl p-6">
+            <h3 class="text-2xl font-bold mb-6 text-center">📄 Downloads</h3>
+
+            <div class="space-y-5">
+
+              <!-- RULES -->
+              <a href="Rules PDF/AION_2K26_OVERALL_RULES.pdf" download class="flex items-center justify-between gap-4 p-4 rounded-xl
+                    bg-white/5 hover:bg-white/10 border border-white/10 transition">
+                <div>
+                  <p class="font-semibold text-lg">Rules & Regulations</p>
+                  <p class="text-sm text-slate-400">Complete symposium rules</p>
+                </div>
+                <span class="text-blue-400 text-xl">⬇</span>
+              </a>
+
+              <!-- SCHEDULE -->
+              <a href="Rules PDF/AION_2K26_SCHEDULE.PDF" download class="flex items-center justify-between gap-4 p-4 rounded-xl
+                    bg-white/5 hover:bg-white/10 border border-white/10 transition">
+                <div>
+                  <p class="font-semibold text-lg">Event Schedule</p>
+                  <p class="text-sm text-slate-400">Full day-wise program</p>
+                </div>
+                <span class="text-green-400 text-xl">⬇</span>
+              </a>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
+
 
   </section>
 
@@ -133,16 +188,28 @@
         <p class="credits-label">Developed By</p>
         <div class="developers">
           <div class="developer">
-            <p class="developer-name dev-primary">Jeeva Loganathan</p>
+            <p class="developer-name dev-primary">
+              <a href="https://www.linkedin.com/in/jeeva-l/" target="_blank" rel="noopener noreferrer">
+                Jeeva Loganathan
+              </a>
+            </p>
             <p class="developer-role">1st M.Sc AI</p>
           </div>
+
           <span class="dev-separator">|</span>
+
           <div class="developer">
-            <p class="developer-name dev-secondary">William James</p>
+            <p class="developer-name dev-secondary">
+              <a href="https://www.linkedin.com/in/william-james-a-10b126300/" target="_blank"
+                rel="noopener noreferrer">
+                William James
+              </a>
+            </p>
             <p class="developer-role">1st M.Sc AI</p>
           </div>
         </div>
       </div>
+
 
       <div class="footer-bottom">
         <p>© 2026 AION Symposium. All rights reserved.</p>
