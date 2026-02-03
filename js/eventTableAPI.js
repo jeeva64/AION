@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const API_BASE        = "https://sjcaisymposium.onrender.com";
   const GET_ENDPOINT    = `${API_BASE}/getcandidates`;
-  const TEAM_ENDPOINT   = `${API_BASE}/registerteam`;   // ← single call for the whole team
+  const TEAM_ENDPOINT   = `${API_BASE}/registerteam`;
 
   const registeredBody    = document.getElementById("registeredBody");
   const eventSelect       = document.getElementById("eventSelect");
@@ -34,11 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const SLOT_2_EVENTS = ["QRush", "VisionX", "ThinkSync", "Crazy Sell"];
 
   // ─── LIVE STATE ──────────────────────────────────────────────────
-  // studentMap: registerNumber → { event1, slot1, event2, slot2 }
-  //   rebuilt every time we reload from the server.
-  let studentMap            = {};
-  let registeredEvents      = [];   // events that already have a team
-  let totalStudentCount     = 0;    // number of student docs (the 15-cap counter)
+  let studentMap            = {};   // registerNumber → full doc shape from server
+  let registeredEvents      = [];
+  let totalStudentCount     = 0;
 
   /* ===================== SWEET ALERT HELPERS ===================== */
   function showSuccess(msg) {
@@ -113,40 +111,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ===================== CHECK PARTICIPANT CONFLICTS ===================== */
-  // Reads from studentMap which mirrors the event1/event2 shape in the DB.
   function checkParticipantConflicts(registerNumber, selectedEvent) {
     const doc = studentMap[registerNumber];
     if (!doc) return { hasConflict: false, message: "" };
 
     const selectedSlot = EVENT_CONFIG[selectedEvent].slot;
 
-    // Already in Bid Mayhem
     if (doc.event1 === "Bid Mayhem" || doc.event2 === "Bid Mayhem") {
       return { hasConflict: true, message: "Already in Bid Mayhem (blocks all other events)" };
     }
-
-    // Trying to add Bid Mayhem but student already has an event
     if (selectedEvent === "Bid Mayhem" && doc.event1) {
       return {
         hasConflict: true,
         message: `Already in ${doc.event1}${doc.event2 ? ' & ' + doc.event2 : ''}. Bid Mayhem cannot be combined.`
       };
     }
-
-    // Already has 2 events
     if (doc.event2) {
-      return {
-        hasConflict: true,
-        message: `Already in 2 events: ${doc.event1} & ${doc.event2}`
-      };
+      return { hasConflict: true, message: `Already in 2 events: ${doc.event1} & ${doc.event2}` };
     }
-
-    // Slot clash with event1
     if (doc.slot1 === selectedSlot) {
       return { hasConflict: true, message: `Time conflict with ${doc.event1} (same slot)` };
     }
-
     return { hasConflict: false, message: "" };
+  }
+
+  /* ===================== FOOD BADGE HTML (reused in two places) ===================== */
+  function foodBadgeHtml(pref) {
+    const isVeg   = pref === "vegetarian";
+    const bg      = isVeg ? "bg-green-100" : "bg-orange-100";
+    const text    = isVeg ? "text-green-700" : "text-orange-700";
+    const icon    = isVeg ? "🥬" : "🍗";
+    const label   = isVeg ? "Vegetarian" : "Non-Vegetarian";
+    return `<span class="inline-block px-2 py-0.5 rounded text-xs font-semibold ${bg} ${text}">${icon} ${label}</span>`;
   }
 
   /* ===================== GENERATE PARTICIPANT INPUTS ===================== */
@@ -191,6 +187,18 @@ document.addEventListener("DOMContentLoaded", () => {
             <option value="ug">UG</option>
             <option value="pg">PG</option>
           </select>
+
+          <!-- Food Preference: dropdown shown for new students, replaced with
+               a read-only badge on blur once we know the student already exists -->
+          <div id="food_wrapper_${i}" class="mt-3">
+            <label class="block text-sm font-semibold text-slate-700">Food Preference *</label>
+            <select id="participant_food_${i}"
+              class="w-full border-2 border-slate-300 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+              <option value="">Select Preference</option>
+              <option value="vegetarian">🥬 Vegetarian</option>
+              <option value="non-vegetarian">🍗 Non-Vegetarian</option>
+            </select>
+          </div>
         </div>`;
     }
 
@@ -199,16 +207,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ── Blur listeners ──────────────────────────────────────────
     for (let i = 1; i <= count; i++) {
-      // Register-number conflict check
-      const regInput = document.getElementById(`participant_reg_${i}`);
-      const warnDiv  = document.getElementById(`conflict_warning_${i}`);
+      const regInput  = document.getElementById(`participant_reg_${i}`);
+      const warnDiv   = document.getElementById(`conflict_warning_${i}`);
+      const foodWrap  = document.getElementById(`food_wrapper_${i}`);
+
       regInput?.addEventListener('blur', () => {
         const val = regInput.value.trim().toUpperCase();
-        if (val && event) {
+        if (!val) return;
+
+        // ── conflict check (always) ───────────────────────────
+        if (event) {
           const c = checkParticipantConflicts(val, event);
           warnDiv.textContent = c.hasConflict ? `⚠️ ${c.message}` : '';
           warnDiv.classList.toggle('hidden', !c.hasConflict);
           regInput.classList.toggle('border-red-500', c.hasConflict);
+        }
+
+        // ── food preference: swap dropdown ↔ badge ────────────
+        const existing = studentMap[val];
+        if (existing) {
+          // Student already registered → show their saved preference as badge,
+          // remove the dropdown so it's not collected again.
+          foodWrap.innerHTML = `
+            <label class="block text-sm font-semibold text-slate-700">Food Preference</label>
+            <div class="mt-1 flex items-center gap-2">
+              ${foodBadgeHtml(existing.foodPreference)}
+              <span class="text-xs text-slate-500">(already saved)</span>
+            </div>`;
+        } else {
+          // Brand-new student → restore the dropdown if it was previously
+          // replaced (e.g. user cleared the reg field and typed a new one).
+          foodWrap.innerHTML = `
+            <label class="block text-sm font-semibold text-slate-700">Food Preference *</label>
+            <select id="participant_food_${i}"
+              class="w-full border-2 border-slate-300 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+              <option value="">Select Preference</option>
+              <option value="vegetarian">🥬 Vegetarian</option>
+              <option value="non-vegetarian">🍗 Non-Vegetarian</option>
+            </select>`;
         }
       });
 
@@ -269,29 +305,28 @@ document.addEventListener("DOMContentLoaded", () => {
       totalStudentCount = result.totalStudents;
       registeredEvents  = result.registeredEvents;
 
-      // ── Rebuild studentMap from every doc ───────────────────────
+      // ── Rebuild studentMap ──────────────────────────────────────
       result.data.forEach(doc => {
         studentMap[doc.registerNumber] = {
-          name:   doc.name,
-          mobile: doc.mobile,
-          degree: doc.degree,
-          event1: doc.event1,
-          slot1:  doc.slot1,
-          event2: doc.event2 || null,
-          slot2:  doc.slot2  || null
+          name:           doc.name,
+          mobile:         doc.mobile,
+          degree:         doc.degree,
+          foodPreference: doc.foodPreference,
+          event1:         doc.event1,
+          slot1:          doc.slot1,
+          event2:         doc.event2 || null,
+          slot2:          doc.slot2  || null
         };
       });
 
       // ── Group by event for the table ────────────────────────────
-      // Each student can appear in up to 2 event groups.
       const teamsByEvent = {};
-
       result.data.forEach(doc => {
         [
           { event: doc.event1, slot: doc.slot1 },
           { event: doc.event2, slot: doc.slot2 }
         ].forEach(({ event, slot }) => {
-          if (!event) return;                          // event2 can be null
+          if (!event) return;
           if (!teamsByEvent[event]) {
             teamsByEvent[event] = { event, slot, participants: [] };
           }
@@ -299,7 +334,8 @@ document.addEventListener("DOMContentLoaded", () => {
             name:           doc.name,
             registerNumber: doc.registerNumber,
             degree:         doc.degree,
-            mobile:         doc.mobile
+            mobile:         doc.mobile,
+            foodPreference: doc.foodPreference
           });
         });
       });
@@ -315,8 +351,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const participantsList = team.participants.map(p => `
           <div class="mb-2">
             <div class="font-semibold text-sm">${p.name}</div>
-            <div class="text-xs text-slate-600">${p.registerNumber}
-              <span class="ml-2 inline-block px-1.5 py-0.5 rounded text-xs font-semibold bg-indigo-100 text-indigo-700 uppercase">${p.degree}</span>
+            <div class="text-xs text-slate-600 flex flex-wrap items-center gap-1 mt-0.5">
+              ${p.registerNumber}
+              <span class="inline-block px-1.5 py-0.5 rounded text-xs font-semibold bg-indigo-100 text-indigo-700 uppercase">${p.degree}</span>
+              ${foodBadgeHtml(p.foodPreference)}
             </div>
             <div class="text-xs text-slate-500 mt-0.5">📞 ${p.mobile || '—'}</div>
           </div>`
@@ -359,9 +397,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const participantCount = config.participants;
 
     // ── Collect & validate every member before sending anything ────
-    const participants     = [];
-    const regNumbers       = [];
-    let   newStudents      = 0;
+    const participants = [];
+    const regNumbers   = [];
+    let   newStudents  = 0;
 
     for (let i = 1; i <= participantCount; i++) {
       const name           = document.getElementById(`participant_name_${i}`)?.value.trim();
@@ -378,16 +416,30 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Client-side conflict check
+      // Conflict check
       const conflict = checkParticipantConflicts(registerNumber, event);
       if (conflict.hasConflict) {
         showError(`${name} (${registerNumber}): ${conflict.message}`);
         return;
       }
 
-      if (!studentMap[registerNumber]) newStudents++;
+      const isExisting = !!studentMap[registerNumber];
+
+      // Food preference — required only for new students
+      let foodPreference = null;
+      if (!isExisting) {
+        // The dropdown is still in the DOM for new students
+        foodPreference = document.getElementById(`participant_food_${i}`)?.value;
+        if (!foodPreference) {
+          showError(`Please select a food preference for Member ${i} (${name}).`);
+          return;
+        }
+        newStudents++;
+      }
+      // If existing, foodPreference stays null — we simply don't send it.
+
       regNumbers.push(registerNumber);
-      participants.push({ name, registerNumber, mobile, degree });
+      participants.push({ name, registerNumber, mobile, degree, foodPreference });
     }
 
     // Duplicate reg numbers inside the form
@@ -406,9 +458,17 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // ── Single request — all members in one payload ────────────────
+    // ── Single request ──────────────────────────────────────────────
     try {
       showLoading("Registering team...");
+
+      // Strip foodPreference: null entries so the server payload is clean.
+      // Existing students simply won't have the key present.
+      const cleanParticipants = participants.map(p => {
+        const obj = { name: p.name, registerNumber: p.registerNumber, mobile: p.mobile, degree: p.degree };
+        if (p.foodPreference) obj.foodPreference = p.foodPreference;
+        return obj;
+      });
 
       const res = await fetch(TEAM_ENDPOINT, {
         method: "POST",
@@ -416,7 +476,7 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify({
           leaderId,
           event,
-          participants   // the whole array, server handles everything
+          participants: cleanParticipants
         })
       });
 
@@ -425,13 +485,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (result.success) {
         showSuccess(result.message);
-
-        // Reset form
         eventSelect.value           = "";
         participantInputs.innerHTML = "";
         conflictWarning.style.display = "none";
-
-        loadCandidates();   // refresh table + banner + dropdown
+        loadCandidates();
       } else {
         showError(result.message || "Registration failed");
       }
