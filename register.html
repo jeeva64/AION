@@ -37,7 +37,7 @@
         </span>
       </a>
 
-       <!-- DESKTOP MENU -->
+      <!-- DESKTOP MENU -->
       <div class="hidden md:flex items-center gap-8 text-sm font-medium">
         <a href="/" class="nav-link">Home</a>
         <a href="about.html" class="nav-link">About</a>
@@ -101,7 +101,8 @@
     <div class="hero-content bg-white w-full max-w-2xl rounded-2xl shadow-xl p-6 sm:p-10">
 
       <h2 class="text-3xl font-bold text-center mb-2">Register</h2>
-      <p class="text-center text-slate-500 mb-4">Student Leader Registration</p><hr><br>
+      <p class="text-center text-slate-500 mb-4">Student Leader Registration</p>
+      <hr><br>
 
       <form id="regForm" class="space-y-5">
 
@@ -174,11 +175,15 @@
         </div>
 
         <!-- Terms -->
-        <div class="flex items-center gap-2">
-          <input id="terms" type="checkbox" class="w-4 h-4">
-          <label class="text-sm">I agree to the Terms & Conditions</label>
+        <div class="flex items-center gap-2 text-sm">
+          <input id="terms" type="checkbox" class="w-4 h-4 accent-blue-500">
+          <label for="terms">
+            I agree to the
+            <button type="button" onclick="showTerms()" class="text-blue-400 underline hover:text-blue-300">
+              Terms & Conditions
+            </button>
+          </label>
         </div>
-
         <!-- Submit -->
         <button type="submit"
           class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition">
@@ -222,7 +227,8 @@
                 Jeeva Loganathan
               </a>
             </p>
-            <p class="developer-role">1st M.Sc AI</p>
+            <p class="developer-role">I M.Sc AI</p>
+            <a href="tel:+919976578892">+91 99765 78892</a>
           </div>
 
           <span class="dev-separator">|</span>
@@ -234,7 +240,7 @@
                 William James
               </a>
             </p>
-            <p class="developer-role">1st M.Sc AI</p>
+            <p class="developer-role">I M.Sc AI</p>
           </div>
         </div>
       </div>
@@ -249,6 +255,67 @@
   </footer>
 
   <!-- SCRIPTS -->
+  <script>
+    function showTerms() {
+      Swal.fire({
+        title: 'Terms & Conditions',
+        width: '700px',
+        background: '#020617',
+        color: '#e5e7eb',
+        scrollbarPadding: false,
+        confirmButtonText: 'I Agree',
+        showCancelButton: true,
+        cancelButtonText: 'Close',
+        confirmButtonColor: '#2563eb',
+        cancelButtonColor: '#475569',
+        customClass: {
+          popup: 'rounded-2xl border border-white/10',
+          title: 'text-lg',
+          htmlContainer: 'text-left'
+        },
+        html: `
+      <div class="text-sm leading-relaxed text-slate-300 max-h-[55vh] overflow-y-auto pr-2">
+
+        <p class="font-semibold text-white mb-2">Account & Registration</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Only <b>one student (team leader)</b> should create an account and register for the entire team.</li>
+          <li>Registration is <b>online only</b>. Spot registration is not allowed.</li>
+          <li>Maximum of <b>15 participants per department</b> are allowed.</li>
+          <li>Each participant can register for a maximum of <b>two events</b>.</li>
+        </ul>
+
+        <p class="font-semibold text-white mt-4 mb-2">Registration Fee</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Registration fee is <b>₹200 per participant</b>.</li>
+          <li>Payment must be made <b>on the event day (13-02-2026)</b>.</li>
+          <li>Payment modes accepted: <b>Cash or UPI</b>.</li>
+        </ul>
+
+        <p class="font-semibold text-white mt-4 mb-2">Event Day Instructions</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Participants must report by <b>8:30 a.m. sharp</b>.</li>
+          <li>Valid <b>College ID</b> and <b>Bonafide Certificate</b> (signed by HoD/Coordinator) are mandatory.</li>
+          <li>Refreshments and lunch will be provided only to <b>registered participants</b>.</li>
+        </ul>
+
+        <p class="font-semibold text-white mt-4 mb-2">General Rules</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>The decision of the judges shall be <b>final</b>.</li>
+          <li>Any misbehavior or rule violation will lead to <b>disqualification</b>.</li>
+          <li>Registration deadline: <b>09-02-2026 (Monday)</b>.</li>
+          <li>For queries, contact the <b>Chairman of the Symposium</b> (details in brochure).</li>
+        </ul>
+
+      </div>
+    `
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.getElementById('terms').checked = true;
+        }
+      });
+    }
+  </script>
+
   <script src="js/landing.js"></script>
   <script src="js/registerAPI.js"></script>
 

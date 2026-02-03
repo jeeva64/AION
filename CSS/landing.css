@@ -6,29 +6,50 @@
 /* =========================
    ANIMATIONS
 ========================= */
-@keyframes float {
-  0%, 100% { 
-    transform: translateY(0) scale(1); 
+@keyframes deadlinePulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.35);
   }
-  50% { 
-    transform: translateY(-30px) scale(1.05); 
+
+  50% {
+    box-shadow: 0 0 14px 4px rgba(239, 68, 68, 0.25);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-30px) scale(1.05);
   }
 }
 
 @keyframes float-delay {
-  0%, 100% { 
-    transform: translateY(0) scale(1); 
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
   }
-  50% { 
-    transform: translateY(-25px) scale(1.03); 
+
+  50% {
+    transform: translateY(-25px) scale(1.03);
   }
 }
 
 @keyframes particle-float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translate(0, 0) rotate(0deg);
     opacity: 0.3;
   }
+
   50% {
     transform: translate(var(--tx), var(--ty)) rotate(180deg);
     opacity: 0.6;
@@ -40,6 +61,7 @@
     transform: scale(1);
     opacity: 1;
   }
+
   100% {
     transform: scale(1.8);
     opacity: 0;
@@ -47,9 +69,12 @@
 }
 
 @keyframes glow {
-  0%, 100% {
+
+  0%,
+  100% {
     filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
   }
+
   50% {
     filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.8));
   }
@@ -60,6 +85,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -210,24 +236,20 @@
 }
 
 /* College Header - Compact */
+
 .college-header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.75rem, 1.8vw, 1.15rem);
+  gap: clamp(0.5rem, 2vw, 1.15rem);
+  width: 100%;
   animation: fadeInUp 0.8s ease-out;
 }
 
-@media (min-width: 1024px) {
-  .college-header {
-    flex-direction: row;
-  }
-}
-
 .college-logo {
-  width: clamp(4.5rem, 9vw, 6rem);
-  height: clamp(4.5rem, 9vw, 6rem);
+  width: clamp(4.2rem, 9vw, 7.8rem);
+  height: clamp(4.2rem, 9vw, 7.8rem);
   object-fit: contain;
   animation: glow 3s ease-in-out infinite;
   transition: transform 0.3s ease;
@@ -240,10 +262,12 @@
 
 .college-info {
   text-align: center;
+  flex: 1 1 0%;
+  min-width: 0;
 }
 
 .college-dept {
-  font-size: clamp(0.656rem, 1.2vw, 0.75rem);
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
   color: #60A5FA;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -254,7 +278,7 @@
 
 .college-name {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(0.938rem, 2vw, 1.25rem);
+  font-size: clamp(1.2rem, 2.8vw, 1.75rem);
   font-weight: 800;
   color: white;
   margin-bottom: 0.125rem;
@@ -267,6 +291,147 @@
   font-weight: 500;
   line-height: 1.25;
 }
+
+/* ===== INFO ROWS  (NAAC / Symposium / Standards) ===== */
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  /* ← NEW */
+  gap: 0.3rem 0.45rem;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  width: fit-content;
+  max-width: 100%;
+  /* ← NEW */
+  margin-left: auto;
+  margin-right: auto;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.info-row:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .25)
+}
+
+.info-row__icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  opacity: .85
+}
+
+.info-row__text {
+  font-size: clamp(0.6rem, 1.4vw, 0.82rem);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.info-row__text strong {
+  font-weight: 700
+}
+
+.info-row__sep {
+  margin: 0 .35rem;
+  opacity: .5
+}
+
+/* NAAC – gold */
+.info-row--naac {
+  background: linear-gradient(135deg, rgba(251, 191, 36, .15), rgba(245, 158, 11, .08));
+  border-color: rgba(251, 191, 36, .28)
+}
+
+.info-row--naac .info-row__icon {
+  color: #fbbf24
+}
+
+.info-row--naac .info-row__text {
+  color: #fcd34d
+}
+
+/* Symposium – violet */
+.info-row--symposium {
+  background: linear-gradient(135deg, rgba(139, 92, 246, .18), rgba(99, 102, 241, .1));
+  border-color: rgba(139, 92, 246, .3)
+}
+
+.info-row--symposium .info-row__icon {
+  color: #a78bfa
+}
+
+.info-row--symposium .info-row__text {
+  color: #c4b5fd
+}
+
+/* Standards – sky blue */
+.info-row--standards {
+  background: linear-gradient(135deg, rgba(56, 189, 248, .14), rgba(99, 202, 255, .07));
+  border-color: rgba(56, 189, 248, .25)
+}
+
+.info-row--standards .info-row__icon {
+  color: #38bdf8
+}
+
+.info-row--standards .info-row__text {
+  color: #7dd3fc
+}
+
+.deadline-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.38rem 0.9rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.18), rgba(220, 38, 38, 0.1));
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  backdrop-filter: blur(6px);
+  animation: fadeInUp 0.8s ease-out 0.45s backwards, deadlinePulse 2.5s ease-in-out infinite;
+  transition: transform 0.25s ease;
+}
+
+.deadline-badge:hover {
+  transform: translateY(-1px);
+}
+
+.deadline-icon {
+  width: 1rem;
+  height: 1rem;
+  color: #f87171;
+  flex-shrink: 0;
+}
+
+.deadline-text {
+  font-size: clamp(0.64rem, 1.3vw, 0.8rem);
+  color: #fca5a5;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.deadline-text strong {
+  color: #f87171;
+  font-weight: 700;
+}
+
+.college-naac {
+  font-size: clamp(0.78rem, 1.4vw, 0.95rem);
+  color: #a5b4fc;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.college-ranking {
+  font-size: clamp(0.72rem, 1.3vw, 0.9rem);
+  color: rgba(203, 213, 225, 0.9);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
 
 /* Hero Badge - Compact */
 .hero-badge {
@@ -423,7 +588,7 @@
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: clamp(0.875rem, 1.8vw, 1.25rem);
-  padding: 1.2rem 1.1rem;
+  padding: 0.5rem 0.5rem;
   text-align: center;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -572,12 +737,24 @@
   .hero-stack {
     gap: clamp(1.25rem, 2.5vh, 1.75rem);
   }
-  
+
   .college-logo {
-    width: clamp(5rem, 14vw, 6.5rem);
-    height: clamp(5rem, 14vw, 6.5rem);
+    width:  clamp(3.2rem, 10vw, 4.5rem);
+    height: clamp(3.2rem, 10vw, 4.5rem);
   }
-  
+
+  .info-row {
+    padding: 0.28rem 0.55rem;
+  }
+
+  .info-row__text {
+    font-size: clamp(0.58rem, 1.5vw, 0.72rem);
+  }
+
+  .info-row__sep {
+    margin: 0 0.18rem;
+  }
+
   .hero-title-image {
     width: clamp(260px, 55vw, 420px);
   }
@@ -588,46 +765,91 @@
   .hero-section {
     padding: 4.5rem 1rem 2.25rem;
   }
-  
+
   .hero-stack {
     gap: 1.5rem;
   }
-  
+
   .college-header {
-    gap: 1rem;
+    flex-direction: column;     /* STACK */
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
   }
-  
+
   .college-logo {
-    width: clamp(4.5rem, 18vw, 5.5rem);
-    height: clamp(4.5rem, 18vw, 5.5rem);
+    width: clamp(3.2rem, 22vw, 4rem);
+    height: clamp(3.2rem, 22vw, 4rem);
   }
-  
+
+
   .hero-title-image {
     width: clamp(220px, 75vw, 300px);
   }
-  
+
   .hero-orb-1,
   .hero-orb-2,
   .hero-orb-3 {
     filter: blur(50px);
   }
-  
+
   .date-badge {
     flex-wrap: wrap;
     justify-content: center;
     padding: 0.7rem 1rem;
   }
-  
+
   .date-separator {
     display: none;
   }
-  
+
   .stats-grid {
     gap: 1rem;
   }
-  
+
   .stat-card {
     padding: 1.25rem;
+  }
+
+  .college-info {
+    text-align: center;
+  }
+
+  .college-dept {
+    font-size: clamp(0.65rem, 3vw, 0.75rem);
+  }
+
+  .college-name {
+    font-size: clamp(0.95rem, 4.5vw, 1.1rem);
+  }
+
+  .college-affiliation {
+    font-size: clamp(0.6rem, 3vw, 0.7rem);
+  }
+
+  .info-row {
+    padding: 0.25rem 0.45rem;
+    margin-top: 0.35rem;
+  }
+
+  .info-row__icon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .info-row__text {
+    font-size: clamp(0.55rem, 2.6vw, 0.65rem);
+  }
+
+  .info-row__sep {
+    margin: 0 0.12rem;
+    font-size: 0.6rem;
+  }
+
+  .deadline-text {
+    font-size: clamp(0.6rem, 2.8vw, 0.72rem);
   }
 }
 
@@ -637,6 +859,7 @@
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -655,12 +878,13 @@
 }
 
 /* Improve performance */
-.hero-content > * {
+.hero-content>* {
   will-change: transform, opacity;
 }
 
 /* Print styles */
 @media print {
+
   .hero-background,
   .particles-container {
     display: none;

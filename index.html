@@ -67,7 +67,6 @@
   <link rel="stylesheet" href="CSS/navbar.css">
   <link rel="stylesheet" href="CSS/landing.css">
   <link rel="stylesheet" href="CSS/homeEvents.css">
-  <link rel="stylesheet" href="CSS/admin.css">
   <link rel="stylesheet" href="CSS/footer.css">
 </head>
 
@@ -121,7 +120,6 @@
     </div>
   </nav>
 
-  <!-- HERO SECTION -->
   <section class="hero-section">
 
     <!-- Animated Background -->
@@ -144,7 +142,7 @@
     <div class="hero-content">
       <div class="hero-stack">
 
-        <!-- College Header (unchanged) -->
+        <!-- ══ College Header  (logos ALWAYS beside info) ══ -->
         <div class="college-header">
           <img src="/Images/CLG LOGO.png" class="college-logo" alt="College Logo" />
 
@@ -154,31 +152,62 @@
             <p class="college-affiliation">
               Affiliated to Bharathidasan University, Tiruchirappalli
             </p>
+
+            <!-- NAAC row -->
+            <div class="info-row info-row--naac">
+              <svg class="info-row__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 2l2.4 5.6L18 8.5l-4 3.8.9 5.7L10 15l-4.9 3 .9-5.7-4-3.8 5.6-.9z" />
+              </svg>
+              <span class="info-row__text">
+                Accredited at <strong>A++ (Cycle IV)</strong> by NAAC
+                <span class="info-row__sep">•</span>
+                Special Heritage Status by UGC
+              </span>
+            </div>
+
+            <!-- Standards row -->
+            <div class="info-row info-row--standards">
+              <svg class="info-row__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="11" width="3" height="7" rx="0.8" />
+                <rect x="8.5" y="7" width="3" height="11" rx="0.8" />
+                <rect x="15" y="3" width="3" height="15" rx="0.8" />
+              </svg>
+              <span class="info-row__text">
+                College with Potential for Excellence (UGC)
+                <!-- <span class="info-row__sep">•</span>
+                DBT-STAR &amp; DST-FIST Sponsored -->
+                <span class="info-row__sep">•</span>
+                <strong>25th Rank in NIRF 2025</strong>
+              </span>
+            </div>
           </div>
 
           <img src="/Images/ASSO LOGO.png" class="college-logo" alt="Department Logo" />
         </div>
 
-        <!-- Badge -->
+        <!-- ══ Badge ══ -->
         <div class="hero-badge">
           <span class="pulse-indicator">
             <span class="pulse-ring"></span>
             <span class="pulse-dot"></span>
-          </span> Proudly Presents
+          </span>
+          Proudly Presents
         </div>
 
-        <!-- Main Logo -->
+        <!-- ══ Main Logo ══ -->
         <div class="hero-title-container">
           <img src="/Images/logo.png" alt="AION 2K26" class="hero-title-image" />
         </div>
 
-        <!-- Strong Value Proposition (NEW) -->
+        <!-- ══ Tagline ══
         <p class="hero-subtitle hero-tagline">
           A State Level Technical Symposium
           <span class="highlight-text">where AI meets Innovation</span>
-        </p>
+        </p> -->
 
-        <!-- Date + Location -->
+        <!-- ══ Date + Location ══ -->
         <div class="date-badge">
           <svg class="date-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -186,42 +215,49 @@
           </svg>
           <span class="date-text">February 13, 2026</span>
           <span class="date-separator">|</span>
-          <span class="date-day">Friday @ Sail Hall, Arrupe Library Building</span>
+          <span class="date-day">Friday @ Sail Hall, Arrupe Library</span>
         </div>
 
-        <!-- Stats (Moved UP for Trust) -->
+        <!-- ══ Stats ══ -->
         <div class="stats-grid">
           <div class="stat-card stat-card-1">
             <div class="stat-value stat-value-blue">8</div>
             <div class="stat-label">Events</div>
           </div>
-
           <div class="stat-card stat-card-2">
             <div class="stat-value stat-value-green">₹200</div>
             <div class="stat-label">Entry Fee</div>
           </div>
-
           <div class="stat-card stat-card-3">
             <div class="stat-value stat-value-yellow">1 Day</div>
             <div class="stat-label">Power-Packed Experience</div>
           </div>
         </div>
 
-        <!-- CTA (Primary Focus) -->
+        <!-- ══ Registration Deadline  (NEW) ══ -->
+        <div class="deadline-badge">
+          <svg class="deadline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 6v6l4 2" />
+          </svg>
+          <span class="deadline-text">
+            Registration Deadline &mdash; <strong>February 9, 2026</strong>
+          </span>
+        </div>
+
+        <!-- ══ CTA ══ -->
         <div class="cta-group">
           <a href="register.html" class="cta-button-primary">
             <span class="cta-text">Register Now</span>
             <div class="cta-gradient"></div>
           </a>
-
-          <a href="brochure.html" class="cta-button-secondary">
-            View Brochure
-          </a>
+          <a href="brochure.html" class="cta-button-secondary">View Brochure</a>
         </div>
       </div>
     </div>
-
   </section>
+
 
   <!-- EVENTS SECTION -->
   <section class="events-section">
@@ -238,7 +274,17 @@
 
       <div class="events-grid">
         <div class="event-card tech">
-          <div class="event-badge badge-blue">01</div>
+          <div class="event-badge badge-cyan">01</div>
+          <h3>QRush</h3>
+          <p>Test your knowledge in AI, ML, and Data Science</p>
+          <div class="event-meta">
+            <span class="event-time">Slot 2 • 2 PM - 4 PM</span>
+            <span class="event-team">2 Members</span>
+          </div>
+        </div>
+
+        <div class="event-card tech">
+          <div class="event-badge badge-blue">02</div>
           <h3>Fixathon</h3>
           <p>Identify and fix bugs in real-world problem statements</p>
           <div class="event-meta">
@@ -248,22 +294,12 @@
         </div>
 
         <div class="event-card tech">
-          <div class="event-badge badge-purple">02</div>
+          <div class="event-badge badge-purple">03</div>
           <h3>VisionX</h3>
           <p>Design effective prompts for AI models and tools</p>
           <div class="event-meta">
             <span class="event-time">Slot 2 • 2 PM - 4 PM</span>
             <span class="event-team">1 Participant</span>
-          </div>
-        </div>
-
-        <div class="event-card tech">
-          <div class="event-badge badge-cyan">03</div>
-          <h3>QRush</h3>
-          <p>Test your knowledge in AI, ML, and Data Science</p>
-          <div class="event-meta">
-            <span class="event-time">Slot 2 • 2 PM - 4 PM</span>
-            <span class="event-team">2 Members</span>
           </div>
         </div>
 
@@ -333,82 +369,6 @@
     </div>
 
   </section>
-  
-  <!-- AION 2K26 Developer & System Admin Section -->
-  <section class="aion-dev-section" id="developer-system-admin">
-    <div class="aion-bg-grid"></div>
-    <div class="aion-bg-gradient"></div>
-
-    <div class="aion-dev-container">
-      <h2 class="aion-section-title">Developer & System Admin</h2>
-      <p class="aion-section-subtitle">Technical Team • AION 2K26</p>
-
-      <div class="aion-cards-grid">
-        <!-- Jeeva Loganathan -->
-        <div class="aion-team-card">
-          <div class="aion-card-glow"></div>
-          <div class="aion-corner-accent aion-corner-tl"></div>
-          <div class="aion-corner-accent aion-corner-br"></div>
-
-          <div class="aion-card-header">
-            <h3 class="aion-name">
-              <a href="https://www.linkedin.com/in/jeeva-l/" target="_blank" rel="noopener noreferrer">
-                Jeeva Loganathan
-              </a>
-            </h3>
-            <p class="aion-degree">M.Sc Artificial Intelligence</p>
-          </div>
-
-          <div class="aion-divider"></div>
-
-          <div class="aion-contact-info">
-            <div class="aion-contact-item">
-              <div class="aion-contact-icon">📱</div>
-              <div class="aion-contact-details">
-                <div class="aion-contact-label">Phone</div>
-                <div class="aion-contact-value">
-                  <a href="tel:+919976578892">+91 99765 78892</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- William James A -->
-        <div class="aion-team-card">
-          <div class="aion-card-glow"></div>
-          <div class="aion-corner-accent aion-corner-tl"></div>
-          <div class="aion-corner-accent aion-corner-br"></div>
-
-          <div class="aion-card-header">
-            <h3 class="aion-name">
-              <a href="https://www.linkedin.com/in/william-james-a-10b126300/" target="_blank"
-                rel="noopener noreferrer">
-                William James A
-              </a>
-            </h3>
-            <p class="aion-degree">M.Sc Artificial Intelligence</p>
-          </div>
-
-          <div class="aion-divider"></div>
-
-          <div class="aion-contact-info">
-            <div class="aion-contact-item">
-              <div class="aion-contact-icon">📱</div>
-              <div class="aion-contact-details">
-                <div class="aion-contact-label">Phone</div>
-                <div class="aion-contact-value">
-                  <a href="tel:+918056560315">+91 80565 60315</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- End AION 2K26 Developer & System Admin Section -->
-
 
   <!-- FOOTER -->
   <footer class="footer">
@@ -441,7 +401,8 @@
                 Jeeva Loganathan
               </a>
             </p>
-            <p class="developer-role">1st M.Sc AI</p>
+            <p class="developer-role">I M.Sc AI</p>
+            <a href="tel:+919976578892">+91 99765 78892</a>
           </div>
 
           <span class="dev-separator">|</span>
@@ -453,7 +414,7 @@
                 William James
               </a>
             </p>
-            <p class="developer-role">1st M.Sc AI</p>
+            <p class="developer-role">I M.Sc AI</p>
           </div>
         </div>
       </div>

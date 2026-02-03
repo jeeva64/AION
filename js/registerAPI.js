@@ -39,24 +39,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Error loading colleges:", error);
       
       // Fallback to hardcoded list if API fails
-      collegeSelect.innerHTML = `
-        <option value="">Select College</option>
-        <option>Bishop Heber College, Trichy</option>
-        <option>National College, Trichy</option>
-        <option>Jamal Mohamed College, Trichy</option>
-        <option>CARE College of Engineering, Trichy</option>
-        <option>K. Ramakrishnan College of Technology, Trichy</option>
-        <option>M.A.M. College of Engineering, Trichy</option>
-        <option>Oxford Engineering College, Trichy</option>
-        <option>Government College of Engineering, Trichy</option>
-      `;
+      // collegeSelect.innerHTML = `
+      //   <option value="">Select College</option>
+      //   <option>Bishop Heber College, Trichy</option>
+      //   <option>National College, Trichy</option>
+      //   <option>Jamal Mohamed College, Trichy</option>
+      //   <option>CARE College of Engineering, Trichy</option>
+      //   <option>K. Ramakrishnan College of Technology, Trichy</option>
+      //   <option>M.A.M. College of Engineering, Trichy</option>
+      //   <option>Oxford Engineering College, Trichy</option>
+      //   <option>Government College of Engineering, Trichy</option>
+      // `;
       
       // Optional: Show warning (only if SweetAlert2 is loaded)
       if (typeof Swal !== 'undefined') {
         Swal.fire({
           icon: "warning",
           title: "Could not load colleges",
-          text: "Using default college list",
+          text: "Refresh Your Page",
           timer: 3000,
           showConfirmButton: false
         });
