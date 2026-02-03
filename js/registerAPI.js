@@ -131,6 +131,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         signal: controller.signal
       });
 
+      if (data.success) {
+        Swal.fire('Success!', data.message, 'success');
+      } else {
+        Swal.fire('Error!', data.message, 'error');
+      }
+
       clearTimeout(timeoutId);
 
       const result = await res.json();
