@@ -4,6 +4,7 @@ let currentEventData = [];
 let currentCollege = "";
 let currentDepartment = "";
 let currentEventName = "";
+let collegeStatsData = [];
 
 // Auth check
 if (!sessionStorage.getItem("adminRole") || sessionStorage.getItem("adminRole") !== "1") {
@@ -16,25 +17,23 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
     window.location.href = "loginAdmin.html";
 });
 
-// ============ TAB SWITCHING (FIXED - Now handles all 3 tabs) ============
+// ============ TAB SWITCHING ============
 const tabs = document.querySelectorAll(".tab-btn");
 tabs.forEach(tab => {
     tab.addEventListener("click", () => {
-        // Remove active state from all tabs
         tabs.forEach(t => {
             t.classList.remove("active", "border-blue-600", "text-blue-600");
             t.classList.add("border-transparent", "text-gray-500");
         });
         
-        // Add active state to clicked tab
         tab.classList.add("active", "border-blue-600", "text-blue-600");
         tab.classList.remove("border-transparent", "text-gray-500");
 
-        // Hide all content sections
         document.querySelectorAll(".tab-content").forEach(content => content.classList.add("hidden"));
 
-        // Show the correct section based on tab clicked
-        if (tab.id === "tabViewTeam") {
+        if (tab.id === "tabDashboard") {
+            document.getElementById("dashboardSection").classList.remove("hidden");
+        } else if (tab.id === "tabViewTeam") {
             document.getElementById("viewTeamSection").classList.remove("hidden");
         } else if (tab.id === "tabViewEvent") {
             document.getElementById("viewEventSection").classList.remove("hidden");
@@ -44,7 +43,226 @@ tabs.forEach(tab => {
     });
 });
 
-// View Team
+// ============ DASHBOARD STATS ============
+async function loadDashboardStats() {
+    const loading = document.getElementById("statsLoading");
+    const container = document.getElementById("statsContainer");
+    
+    loading.classList.remove("hidden");
+    container.classList.add("opacity-50");
+
+    try {
+        const res = await fetch(`${API_BASE}/admin/dashboardstats`);
+        const result = await res.json();
+
+        if (!res.ok || !result.success) {
+            throw new Error(result.message || "Failed to fetch stats");
+        }
+
+        const stats = result.stats;
+        collegeStatsData = stats.collegeStats;
+
+        // Update main stats
+        document.getElementById("statTotalMembers").textContent = stats.totalMembers;
+        document.getElementById("statTotalTeams").textContent = stats.totalTeams;
+        document.getElementById("statVegCount").textContent = stats.vegCount;
+        document.getElementById("statNonVegCount").textContent = stats.nonVegCount;
+
+        // Update percentages
+        const vegPercent = stats.totalMembers > 0 ? ((stats.vegCount / stats.totalMembers) * 100).toFixed(1) : 0;
+        const nonVegPercent = stats.totalMembers > 0 ? ((stats.nonVegCount / stats.totalMembers) * 100).toFixed(1) : 0;
+        document.getElementById("statVegPercent").textContent = `${vegPercent}% of total`;
+        document.getElementById("statNonVegPercent").textContent = `${nonVegPercent}% of total`;
+
+        // Update degree stats
+        document.getElementById("statUGCount").textContent = stats.ugCount;
+        document.getElementById("statPGCount").textContent = stats.pgCount;
+
+        // Render event stats
+        renderEventStats(stats.eventCounts);
+
+        // Render college stats
+        renderCollegeStats(stats.collegeStats);
+
+        // Render department stats
+        renderDeptStats(stats.deptCounts, stats.totalMembers);
+
+    } catch (err) {
+        console.error("Dashboard Stats Error:", err);
+        Swal.fire("Error", err.message, "error");
+    } finally {
+        loading.classList.add("hidden");
+        container.classList.remove("opacity-50");
+    }
+}
+
+function renderEventStats(eventCounts) {
+    const container = document.getElementById("eventStatsContainer");
+    container.innerHTML = "";
+
+    const eventColors = {
+        "Fixathon": "bg-blue-100 text-blue-800 border-blue-200",
+        "Mute Masters": "bg-purple-100 text-purple-800 border-purple-200",
+        "Treasure Titans": "bg-yellow-100 text-yellow-800 border-yellow-200",
+        "VisionX": "bg-pink-100 text-pink-800 border-pink-200",
+        "QRush": "bg-green-100 text-green-800 border-green-200",
+        "ThinkSync": "bg-indigo-100 text-indigo-800 border-indigo-200",
+        "Bid Mayhem": "bg-red-100 text-red-800 border-red-200",
+        "Crazy Sell": "bg-orange-100 text-orange-800 border-orange-200"
+    };
+
+    const eventSlots = {
+        "Fixathon": "Slot 1",
+        "Mute Masters": "Slot 1",
+        "Treasure Titans": "Slot 1",
+        "VisionX": "Slot 2",
+        "QRush": "Slot 2",
+        "ThinkSync": "Slot 2",
+        "Bid Mayhem": "Both",
+        "Crazy Sell": "Slot 2"
+    };
+
+    Object.entries(eventCounts).forEach(([event, count]) => {
+        const colorClass = eventColors[event] || "bg-gray-100 text-gray-800 border-gray-200";
+        const slot = eventSlots[event] || "";
+        
+        const card = document.createElement("div");
+        card.className = `p-4 rounded-lg border-2 ${colorClass}`;
+        card.innerHTML = `
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="font-semibold">${event}</p>
+                    <p class="text-xs opacity-70">${slot}</p>
+                </div>
+                <span class="text-2xl font-bold">${count}</span>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderCollegeStats(collegeStats) {
+    const tbody = document.getElementById("collegeStatsBody");
+    tbody.innerHTML = "";
+
+    if (collegeStats.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-500">No registrations found</td></tr>`;
+        return;
+    }
+
+    // Sort by member count descending
+    collegeStats.sort((a, b) => b.members - a.members);
+
+    collegeStats.forEach((stat, index) => {
+        const row = document.createElement("tr");
+        row.className = "hover:bg-gray-50";
+        row.innerHTML = `
+            <td class="px-4 py-3 text-sm text-gray-900">${index + 1}</td>
+            <td class="px-4 py-3 text-sm text-gray-900">${stat.college}</td>
+            <td class="px-4 py-3 text-sm text-gray-600">${stat.department.toUpperCase()}</td>
+            <td class="px-4 py-3 text-sm font-semibold text-blue-600">${stat.members}</td>
+            <td class="px-4 py-3 text-sm">
+                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">${stat.veg}</span>
+            </td>
+            <td class="px-4 py-3 text-sm">
+                <span class="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs">${stat.nonVeg}</span>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderDeptStats(deptCounts, totalMembers) {
+    const container = document.getElementById("deptStatsContainer");
+    container.innerHTML = "";
+
+    const deptNames = {
+        "cs": "Computer Science",
+        "ds": "Data Science",
+        "ai": "AI & ML",
+        "it": "Information Technology",
+        "ca": "Computer Applications"
+    };
+
+    const deptColors = {
+        "cs": "bg-blue-500",
+        "ds": "bg-green-500",
+        "ai": "bg-purple-500",
+        "it": "bg-orange-500",
+        "ca": "bg-pink-500"
+    };
+
+    Object.entries(deptCounts).forEach(([dept, count]) => {
+        const percentage = totalMembers > 0 ? ((count / totalMembers) * 100).toFixed(1) : 0;
+        const colorClass = deptColors[dept] || "bg-gray-500";
+        const deptName = deptNames[dept] || dept.toUpperCase();
+
+        const item = document.createElement("div");
+        item.innerHTML = `
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-sm font-medium text-gray-700">${deptName}</span>
+                <span class="text-sm text-gray-500">${count} (${percentage}%)</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="${colorClass} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+// Refresh stats button
+document.getElementById("refreshStatsBtn").addEventListener("click", loadDashboardStats);
+
+// Export college stats
+document.getElementById("exportCollegeStatsBtn").addEventListener("click", () => {
+    if (collegeStatsData.length === 0) {
+        Swal.fire("No Data", "No college stats to export", "warning");
+        return;
+    }
+
+    const excelData = collegeStatsData.map((stat, index) => ({
+        "S.No": index + 1,
+        "College Name": stat.college,
+        "Department": stat.department.toUpperCase(),
+        "Total Members": stat.members,
+        "Vegetarian": stat.veg,
+        "Non-Vegetarian": stat.nonVeg
+    }));
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(excelData);
+
+    XLSX.utils.sheet_add_aoa(ws, [
+        [`AION 2K26 - College-wise Registration Stats`],
+        [`Generated: ${new Date().toLocaleString()}`],
+        []
+    ], { origin: "A1" });
+
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    range.e.r += 3;
+    ws['!ref'] = XLSX.utils.encode_range(range);
+
+    ws['!cols'] = [
+        { wch: 6 },
+        { wch: 40 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 12 },
+        { wch: 15 }
+    ];
+
+    XLSX.utils.book_append_sheet(wb, ws, "College Stats");
+    XLSX.writeFile(wb, `AION_College_Stats_${new Date().toISOString().split('T')[0]}.xlsx`);
+    Swal.fire("Success", "College stats exported!", "success");
+});
+
+// Load stats on page load
+document.addEventListener("DOMContentLoaded", () => {
+    loadDashboardStats();
+});
+
+// ============ VIEW TEAM ============
 document.getElementById("searchTeamBtn").addEventListener("click", async () => {
     const college = document.getElementById("teamCollege").value.trim();
     const department = document.getElementById("teamDepartment").value.trim();
@@ -81,16 +299,17 @@ document.getElementById("searchTeamBtn").addEventListener("click", async () => {
         Swal.fire("Error", err.message, "error");
         document.getElementById("teamResults").classList.add("hidden");
         document.getElementById("exportTeamBtn").classList.add("hidden");
-    } finally {
-        btn.disabled = false;
-        btn.textContent = "Search Team";
         document.getElementById("teamCollege").selectedIndex = 0;
         document.getElementById("teamDepartment").selectedIndex = 0;
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "🔍 Search Team";
     }
 });
 
 function displayTeamResults(team) {
     const tbody = document.getElementById("teamTableBody");
+    const teamCount = document.getElementById("teamCount");
     tbody.innerHTML = "";
 
     if (team.length === 0) {
@@ -99,20 +318,45 @@ function displayTeamResults(team) {
         return;
     }
 
-    team.forEach(member => {
+    teamCount.textContent = `Total: ${team.length} member(s)`;
+
+    team.forEach((member, index) => {
         const row = document.createElement("tr");
         row.className = "hover:bg-gray-50";
+        
+        const foodPref = member.foodPreference 
+            ? (member.foodPreference === 'vegetarian' ? '🌱 Veg' : '🍖 Non-Veg')
+            : 'N/A';
+
         row.innerHTML = `
+          <td class="px-4 py-3 text-sm text-gray-900 font-medium">${index + 1}</td>
           <td class="px-4 py-3 text-sm text-gray-900">${member.name || 'N/A'}</td>
-          <td class="px-4 py-3 text-sm text-gray-600">${member.registerNumber || 'N/A'}</td>
-          <td class="px-4 py-3 text-sm text-gray-600">${member.degree || 'N/A'}</td>
-          <td class="px-4 py-3 text-sm text-gray-600">${member.event1 || 'N/A'}</td>
-          <td class="px-4 py-3 text-sm text-gray-600">${member.event2 || 'N/A'}</td>
-          <td class="px-4 py-3 text-sm text-gray-600">${member.leaderId || 'N/A'}</td>
+          <td class="px-4 py-3 text-sm text-gray-600 font-mono">${member.registerNumber || 'N/A'}</td>
+          <td class="px-4 py-3 text-sm text-gray-600">${member.degree ? member.degree.toUpperCase() : 'N/A'}</td>
           <td class="px-4 py-3 text-sm">
-            <button onclick="deleteMember('${member.leaderId}', '${member.registerNumber}')" class="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition">
-              Delete
-            </button>
+            ${member.event1 
+              ? `<span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">${member.event1}</span>` 
+              : '<span class="text-gray-400">N/A</span>'}
+          </td>
+          <td class="px-4 py-3 text-sm">
+            ${member.event2 
+              ? `<span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">${member.event2}</span>` 
+              : '<span class="text-gray-400">N/A</span>'}
+          </td>
+          <td class="px-4 py-3 text-sm text-gray-600">${member.mobile || 'N/A'}</td>
+          <td class="px-4 py-3 text-sm text-gray-600">${foodPref}</td>
+          <td class="px-4 py-3 text-sm text-gray-600 font-mono text-xs">${member.leaderId || 'N/A'}</td>
+          <td class="px-4 py-3 text-sm">
+            <div class="flex flex-col gap-1">
+              <button onclick="deleteMember('${member.leaderId}', '${member.registerNumber}')" 
+                class="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition whitespace-nowrap">
+                🗑️ Delete Member
+              </button>
+              <button onclick="deleteEntireTeam('${member.leaderId}')" 
+                class="px-3 py-1 bg-orange-600 text-white text-xs rounded hover:bg-orange-700 transition whitespace-nowrap">
+                ⚠️ Delete Team
+              </button>
+            </div>
           </td>
         `;
         tbody.appendChild(row);
@@ -121,7 +365,7 @@ function displayTeamResults(team) {
     document.getElementById("teamResults").classList.remove("hidden");
 }
 
-// Delete Team Member
+// ============ DELETE FUNCTIONS ============
 async function deleteMember(userid, registerNumber) {
     const result = await Swal.fire({
         title: 'Delete Member?',
@@ -150,13 +394,85 @@ async function deleteMember(userid, registerNumber) {
 
         Swal.fire("Deleted!", data.message, "success");
         document.getElementById("searchTeamBtn").click();
+        loadDashboardStats();
 
     } catch (err) {
         Swal.fire("Error", err.message, "error");
     }
 }
 
-// View Event Registrations
+async function deleteEntireTeam(leaderId) {
+    const result = await Swal.fire({
+        title: 'Delete Entire Team?',
+        html: `<p class="text-red-600 font-semibold">⚠️ WARNING: This will delete ALL members registered under leader:</p>
+               <p class="font-mono bg-gray-100 p-2 rounded mt-2">${leaderId}</p>
+               <p class="mt-2 text-sm text-gray-600">This action cannot be undone!</p>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, delete entire team'
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+        const res = await fetch(`${API_BASE}/admin/deleteteam/${leaderId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+            throw new Error(data.message || "Failed to delete team");
+        }
+
+        Swal.fire("Deleted!", data.message, "success");
+        document.getElementById("searchTeamBtn").click();
+        loadDashboardStats();
+
+    } catch (err) {
+        Swal.fire("Error", err.message, "error");
+    }
+}
+
+async function deleteTeamFromEvent(leaderId, eventName) {
+    const result = await Swal.fire({
+        title: 'Remove Team from Event?',
+        html: `<p>This will remove the team from <strong>"${eventName}"</strong>.</p>
+               <p class="text-sm text-gray-500 mt-2">Note: If members have another event, they will still remain registered for that event.</p>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, remove'
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+        const res = await fetch(`${API_BASE}/admin/deleteteambyevent/${leaderId}/${encodeURIComponent(eventName)}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+            throw new Error(data.message || "Failed to remove team from event");
+        }
+
+        Swal.fire("Removed!", data.message, "success");
+        document.getElementById("searchEventBtn").click();
+        loadDashboardStats();
+
+    } catch (err) {
+        Swal.fire("Error", err.message, "error");
+    }
+}
+
+// ============ VIEW EVENT REGISTRATIONS ============
 document.getElementById("searchEventBtn").addEventListener("click", async () => {
     const eventName = document.getElementById("eventName").value.trim();
 
@@ -193,8 +509,7 @@ document.getElementById("searchEventBtn").addEventListener("click", async () => 
         document.getElementById("exportEventBtn").classList.add("hidden");
     } finally {
         btn.disabled = false;
-        btn.textContent = "Search Event";
-        document.getElementById("eventName").selectedIndex = 0;
+        btn.textContent = "🔍 Search Event";
     }
 });
 
@@ -208,32 +523,66 @@ function displayEventResults(data) {
         return;
     }
 
-    data.forEach(team => {
+    // Summary card
+    const totalParticipants = data.reduce((sum, team) => sum + team.members.length, 0);
+    const summaryCard = document.createElement("div");
+    summaryCard.className = "bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-sm p-6 text-white";
+    summaryCard.innerHTML = `
+        <h3 class="text-lg font-semibold mb-2">Event: ${currentEventName}</h3>
+        <div class="flex gap-6">
+            <div>
+                <p class="text-3xl font-bold">${data.length}</p>
+                <p class="text-sm opacity-80">Teams</p>
+            </div>
+            <div>
+                <p class="text-3xl font-bold">${totalParticipants}</p>
+                <p class="text-sm opacity-80">Participants</p>
+            </div>
+        </div>
+    `;
+    container.appendChild(summaryCard);
+
+    data.forEach((team, teamIndex) => {
         const card = document.createElement("div");
         card.className = "bg-white rounded-xl shadow-sm p-6";
 
-        let membersHtml = team.members.map(m => `
+        let membersHtml = team.members.map((m, idx) => `
           <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 text-sm text-gray-900">${idx + 1}</td>
             <td class="px-4 py-3 text-sm text-gray-900">${m.name}</td>
-            <td class="px-4 py-3 text-sm text-gray-600">${m.registerNumber}</td>
-            <td class="px-4 py-3 text-sm text-gray-600">${m.degree}</td>
-            <td class="px-4 py-3 text-sm text-gray-600">${m.event1 || 'N/A'}</td>
-            <td class="px-4 py-3 text-sm text-gray-600">${m.event2 || 'N/A'}</td>
+            <td class="px-4 py-3 text-sm text-gray-600 font-mono">${m.registerNumber}</td>
+            <td class="px-4 py-3 text-sm text-gray-600">${m.degree ? m.degree.toUpperCase() : 'N/A'}</td>
+            <td class="px-4 py-3 text-sm text-gray-600">${m.mobile || 'N/A'}</td>
+            <td class="px-4 py-3 text-sm">
+              ${m.event1 || 'N/A'} ${m.slot1 ? `<span class="text-xs text-gray-400">(Slot ${m.slot1})</span>` : ''}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              ${m.event2 || 'N/A'} ${m.slot2 ? `<span class="text-xs text-gray-400">(Slot ${m.slot2})</span>` : ''}
+            </td>
           </tr>
         `).join('');
 
         card.innerHTML = `
-          <div class="mb-4">
-            <h3 class="text-lg font-semibold text-gray-900">Team Leader: ${team.leaderId}</h3>
-            <p class="text-sm text-gray-600">${team.college} - ${team.department}</p>
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900">Team ${teamIndex + 1}: ${team.leaderId}</h3>
+              <p class="text-sm text-gray-600">${team.college}</p>
+              <p class="text-xs text-gray-400">Department: ${team.department.toUpperCase()}</p>
+            </div>
+            <button onclick="deleteTeamFromEvent('${team.leaderId}', '${currentEventName}')" 
+              class="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition flex items-center gap-1">
+              🗑️ Remove from Event
+            </button>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full">
               <thead class="bg-gray-50 border-b">
                 <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">S.No</th>
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Register No</th>
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Degree</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mobile</th>
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Event 1</th>
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Event 2</th>
                 </tr>
@@ -251,112 +600,126 @@ function displayEventResults(data) {
     container.classList.remove("hidden");
 }
 
-// ============ EXCEL EXPORT FUNCTIONS ============
-
-// Export Team Attendance Sheet
+// ============ EXCEL EXPORT: TEAM ATTENDANCE ============
 document.getElementById("exportTeamBtn").addEventListener("click", () => {
     if (currentTeamData.length === 0) {
         Swal.fire("No Data", "No team data to export", "warning");
         return;
     }
 
-    // Prepare data for Excel
     const excelData = currentTeamData.map((member, index) => ({
-        "Register ID": index + 1,
+        "S.No": index + 1,
         "Name": member.name || "",
         "Register Number": member.registerNumber || "",
-        "Degree": member.degree || "",
+        "Degree": member.degree ? member.degree.toUpperCase() : "",
+        "Mobile": member.mobile || "",
         "Event 1": member.event1 || "",
         "Event 2": member.event2 || "",
+        "Food Preference": member.foodPreference || "",
+        "Leader ID": member.leaderId || "",
         "Signature": ""
     }));
 
-    // Create workbook
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(excelData);
 
-    // Add header rows for College and Department
     XLSX.utils.sheet_add_aoa(ws, [
         [`College: ${currentCollege}`],
-        [`Department: ${currentDepartment}`],
+        [`Department: ${currentDepartment.toUpperCase()}`],
+        [`Generated: ${new Date().toLocaleString()}`],
         []
     ], { origin: "A1" });
 
-    // Move data down to accommodate header
     const range = XLSX.utils.decode_range(ws['!ref']);
-    range.e.r += 3;
+    range.e.r += 4;
     ws['!ref'] = XLSX.utils.encode_range(range);
 
-    // Adjust column widths
     ws['!cols'] = [
-        { wch: 12 },  // Register ID
+        { wch: 6 },   // S.No
         { wch: 25 },  // Name
         { wch: 18 },  // Register Number
-        { wch: 15 },  // Degree
-        { wch: 20 },  // Event 1
-        { wch: 20 },  // Event 2
-        { wch: 20 }   // Signature
+        { wch: 8 },   // Degree
+        { wch: 12 },  // Mobile
+        { wch: 18 },  // Event 1
+        { wch: 18 },  // Event 2
+        { wch: 15 },  // Food Preference
+        { wch: 18 },  // Leader ID
+        { wch: 15 }   // Signature
     ];
 
     XLSX.utils.book_append_sheet(wb, ws, "Attendance");
 
-    // Generate filename
-    const fileName = `${currentCollege}_${currentDepartment}_Attendance_${new Date().toISOString().split('T')[0]}.xlsx`;
+    const fileName = `${currentCollege.replace(/[^a-zA-Z0-9]/g, '_')}_${currentDepartment}_Attendance_${new Date().toISOString().split('T')[0]}.xlsx`;
 
-    // Download
     XLSX.writeFile(wb, fileName);
 
     Swal.fire("Success", "Attendance sheet exported!", "success");
 });
 
-// Export Event Participants Sheet
+// ============ EXCEL EXPORT: EVENT PARTICIPANTS ============
 document.getElementById("exportEventBtn").addEventListener("click", () => {
     if (currentEventData.length === 0) {
         Swal.fire("No Data", "No event data to export", "warning");
         return;
     }
 
-    // Flatten event data - extract all members from all teams
     const excelData = [];
+    let sno = 1;
 
     currentEventData.forEach(team => {
         team.members.forEach(member => {
-            // Only add if this member is registered for the current event
             if (member.event1 === currentEventName || member.event2 === currentEventName) {
                 excelData.push({
+                    "S.No": sno++,
                     "Name": member.name || "",
                     "Register Number": member.registerNumber || "",
+                    "Degree": member.degree ? member.degree.toUpperCase() : "",
+                    "Mobile": member.mobile || "",
                     "College Name": team.college || "",
-                    "Department": team.department || "",
-                    "Event Name": currentEventName
+                    "Department": team.department ? team.department.toUpperCase() : "",
+                    "Leader ID": team.leaderId || "",
+                    "Signature": ""
                 });
             }
         });
     });
 
-    // Create workbook
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(excelData);
 
-    // Adjust column widths
+    XLSX.utils.sheet_add_aoa(ws, [
+        [`Event: ${currentEventName}`],
+        [`Total Participants: ${excelData.length}`],
+        [`Generated: ${new Date().toLocaleString()}`],
+        []
+    ], { origin: "A1" });
+
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    range.e.r += 4;
+    ws['!ref'] = XLSX.utils.encode_range(range);
+
     ws['!cols'] = [
+        { wch: 6 },   // S.No
         { wch: 25 },  // Name
         { wch: 18 },  // Register Number
-        { wch: 30 },  // College Name
-        { wch: 25 },  // Department
-        { wch: 20 }   // Event Name
+        { wch: 8 },   // Degree
+        { wch: 12 },  // Mobile
+        { wch: 35 },  // College Name
+        { wch: 12 },  // Department
+        { wch: 18 },  // Leader ID
+        { wch: 15 }   // Signature
     ];
 
     XLSX.utils.book_append_sheet(wb, ws, "Event Participants");
 
-    // Generate filename
-    const fileName = `${currentEventName}_Participants_${new Date().toISOString().split('T')[0]}.xlsx`;
+    const fileName = `${currentEventName.replace(/[^a-zA-Z0-9]/g, '_')}_Participants_${new Date().toISOString().split('T')[0]}.xlsx`;
 
-    // Download
     XLSX.writeFile(wb, fileName);
 
     Swal.fire("Success", "Event participants list exported!", "success");
 });
 
-// Make deleteMember globally accessible
+// Make functions globally accessible
 window.deleteMember = deleteMember;
+window.deleteEntireTeam = deleteEntireTeam;
+window.deleteTeamFromEvent = deleteTeamFromEvent;
