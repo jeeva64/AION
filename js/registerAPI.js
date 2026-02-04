@@ -131,10 +131,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         signal: controller.signal
       });
 
-      if (data.success) {
-        Swal.fire('Success!', data.message, 'success');
+      if (res.success) {
+        Swal.fire('Success!', res.message, 'success');
       } else {
-        Swal.fire('Error!', data.message, 'error');
+        Swal.fire('Error!', res.message, 'error');
       }
 
       clearTimeout(timeoutId);
