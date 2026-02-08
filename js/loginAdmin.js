@@ -33,7 +33,8 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
             showConfirmButton: false
         });
 
-        sessionStorage.setItem("adminRole", result.role);
+        // FIX: Store role as string to fix type comparison issue
+        sessionStorage.setItem("adminRole", String(result.role));
         sessionStorage.setItem("adminId", adminId);
 
         setTimeout(() => {

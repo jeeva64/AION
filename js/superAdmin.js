@@ -320,87 +320,73 @@ function displayTeamResults(team) {
 
     teamCount.textContent = `Total: ${team.length} member(s)`;
 
-    team.forEach((member, index) => {
-        const row = document.createElement("tr");
-        row.className = "hover:bg-gray-50";
-        
-        const foodPref = member.foodPreference 
-            ? (member.foodPreference === 'vegetarian' ? '🌱 Veg' : '🍖 Non-Veg')
-            : 'N/A';
+    // Group members by leaderId
+    const grouped = {};
+    team.forEach(member => {
+        const lid = member.leaderId || 'Unknown';
+        if (!grouped[lid]) grouped[lid] = [];
+        grouped[lid].push(member);
+    });
 
-        row.innerHTML = `
-          <td class="px-4 py-3 text-sm text-gray-900 font-medium">${index + 1}</td>
-          <td class="px-4 py-3 text-sm text-gray-900">${member.name || 'N/A'}</td>
-          <td class="px-4 py-3 text-sm text-gray-600 font-mono">${member.registerNumber || 'N/A'}</td>
-          <td class="px-4 py-3 text-sm text-gray-600">${member.degree ? member.degree.toUpperCase() : 'N/A'}</td>
-          <td class="px-4 py-3 text-sm">
-            ${member.event1 
-              ? `<span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">${member.event1}</span>` 
-              : '<span class="text-gray-400">N/A</span>'}
-          </td>
-          <td class="px-4 py-3 text-sm">
-            ${member.event2 
-              ? `<span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">${member.event2}</span>` 
-              : '<span class="text-gray-400">N/A</span>'}
-          </td>
-          <td class="px-4 py-3 text-sm text-gray-600">${member.mobile || 'N/A'}</td>
-          <td class="px-4 py-3 text-sm text-gray-600">${foodPref}</td>
-          <td class="px-4 py-3 text-sm text-gray-600 font-mono text-xs">${member.leaderId || 'N/A'}</td>
-          <td class="px-4 py-3 text-sm">
-            <div class="flex flex-col gap-1">
-              <button onclick="deleteMember('${member.leaderId}', '${member.registerNumber}')" 
-                class="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition whitespace-nowrap">
-                🗑️ Delete Member
-              </button>
-              <button onclick="deleteEntireTeam('${member.leaderId}')" 
-                class="px-3 py-1 bg-orange-600 text-white text-xs rounded hover:bg-orange-700 transition whitespace-nowrap">
-                ⚠️ Delete Team
+    let sno = 1;
+
+    Object.entries(grouped).forEach(([leaderId, members]) => {
+        // Team header row with Delete Team button (once per leaderId)
+        const headerRow = document.createElement("tr");
+        headerRow.className = "bg-red-50 border-t-2 border-red-200";
+        headerRow.innerHTML = `
+          <td colspan="9" class="px-4 py-3">
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="text-sm font-semibold text-gray-900">Team Leader: </span>
+                <span class="font-mono text-sm text-gray-700">${leaderId}</span>
+                <span class="text-xs text-gray-500 ml-2">(${members.length} member${members.length > 1 ? 's' : ''})</span>
+              </div>
+              <button onclick="deleteEntireTeam('${leaderId}')" 
+                class="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition flex items-center gap-1">
+                ⚠️ Delete Entire Team
               </button>
             </div>
           </td>
         `;
-        tbody.appendChild(row);
+        tbody.appendChild(headerRow);
+
+        // Member rows (no per-row action buttons)
+        members.forEach(member => {
+            const row = document.createElement("tr");
+            row.className = "hover:bg-gray-50";
+
+            const foodPref = member.foodPreference 
+                ? (member.foodPreference === 'vegetarian' ? '🌱 Veg' : '🍖 Non-Veg')
+                : 'N/A';
+
+            row.innerHTML = `
+              <td class="px-4 py-3 text-sm text-gray-900 font-medium">${sno++}</td>
+              <td class="px-4 py-3 text-sm text-gray-900">${member.name || 'N/A'}</td>
+              <td class="px-4 py-3 text-sm text-gray-600 font-mono">${member.registerNumber || 'N/A'}</td>
+              <td class="px-4 py-3 text-sm text-gray-600">${member.degree ? member.degree.toUpperCase() : 'N/A'}</td>
+              <td class="px-4 py-3 text-sm">
+                ${member.event1 
+                  ? `<span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">${member.event1}</span>` 
+                  : '<span class="text-gray-400">N/A</span>'}
+              </td>
+              <td class="px-4 py-3 text-sm">
+                ${member.event2 
+                  ? `<span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">${member.event2}</span>` 
+                  : '<span class="text-gray-400">N/A</span>'}
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-600">${member.mobile || 'N/A'}</td>
+              <td class="px-4 py-3 text-sm text-gray-600">${foodPref}</td>
+              <td class="px-4 py-3 text-sm text-gray-600 font-mono text-xs">${member.leaderId || 'N/A'}</td>
+            `;
+            tbody.appendChild(row);
+        });
     });
 
     document.getElementById("teamResults").classList.remove("hidden");
 }
 
 // ============ DELETE FUNCTIONS ============
-async function deleteMember(userid, registerNumber) {
-    const result = await Swal.fire({
-        title: 'Delete Member?',
-        text: `Are you sure you want to delete ${registerNumber}?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc2626',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Yes, delete'
-    });
-
-    if (!result.isConfirmed) return;
-
-    try {
-        const res = await fetch(`${API_BASE}/admin/deleteteammember`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userid, registerNumber })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok || !data.success) {
-            throw new Error(data.message || "Failed to delete member");
-        }
-
-        Swal.fire("Deleted!", data.message, "success");
-        document.getElementById("searchTeamBtn").click();
-        loadDashboardStats();
-
-    } catch (err) {
-        Swal.fire("Error", err.message, "error");
-    }
-}
-
 async function deleteEntireTeam(leaderId) {
     const result = await Swal.fire({
         title: 'Delete Entire Team?',
