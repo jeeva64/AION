@@ -19,7 +19,7 @@
     const colleges = await res.json();
     
     // Clear loading message
-    collegeSelect.innerHTML = '<option value="">Select College</option>';
+    collegeSelect.innerHTML = '<option value="">Select College</option><option value="St Joseph College">St. Josephs College, Trichy</option>';
     
     // Filter only registered colleges (if backend doesn't filter)
     const registeredColleges = colleges.filter(c => c.registeredStatus === true);
