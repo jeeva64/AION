@@ -37,6 +37,9 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
         sessionStorage.setItem("adminRole", String(result.role));
         sessionStorage.setItem("adminId", adminId);
 
+        // ✅ STORE THE ADMIN TOKEN
+        //sessionStorage.setItem("token", result.token);    // ← ADD THIS
+
         setTimeout(() => {
             if (result.role === 1) {
                 window.location.href = "superAdmin.html";

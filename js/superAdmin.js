@@ -1,4 +1,6 @@
 const API_BASE = "https://sjcaisymposium.onrender.com";
+//const token = sessionStorage.getItem("token"); 
+
 let currentTeamData = [];
 let currentEventData = [];
 let currentCollege = "";
