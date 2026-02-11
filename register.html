@@ -96,104 +96,39 @@
       <div class="particle particle-6"></div>
     </div>
 
-    <!-- <div class=""> -->
-    <!-- <section class="pt-28 pb-16 px-4 flex justify-center items-center"> -->
-    <div class="hero-content bg-white w-full max-w-2xl rounded-2xl shadow-xl p-6 sm:p-10">
-
-      <h2 class="text-3xl font-bold text-center mb-2">Register</h2>
-      <p class="text-center text-slate-500 mb-4">Student Leader Registration</p>
-      <hr><br>
-
-      <form id="regForm" class="space-y-5">
-
-        <!-- Name -->
-        <div>
-          <label class="block mb-1 font-medium">Full Name: </label>
-          <input id="name" type="text" required placeholder="Enter your name"
-            class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-        </div>
-
-        <!-- Email -->
-        <div>
-          <label class="block mb-1 font-medium">Email: </label>
-          <input id="email" type="email" required placeholder="example@gmail.com"
-            class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-        </div>
-
-        <!-- Mobile -->
-        <div>
-          <label class="block mb-1 font-medium">Mobile Number: </label>
-          <input id="mobile" type="tel" pattern="[0-9]{10}" required placeholder="10-digit number"
-            class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-        </div>
-
-        <!-- College -->
-        <div>
-          <label class="block mb-1 font-medium">College Name: </label>
-          <select id="college" class="w-full border p-2 rounded" required>
-            <option value="">Loading colleges...</option>
-          </select>
-        </div>
-
-        <!-- Department -->
-        <div>
-          <label class="block mb-1 font-medium">Department Name: </label>
-          <select id="department" required
-            class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-            <option value="">Select Department</option>
-            <option value="cs">Computer Science</option>
-            <option value="ds">Data Science</option>
-            <option value="ai">AI & ML</option>
-            <option value="it">Information Technology</option>
-            <option value="ca">Computer Applications</option>
-          </select>
-        </div>
-
-        <!-- Shift -->
-        <div>
-          <label class="block mb-1 font-medium">Shift: </label>
-          <select id="shift" required
-            class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-            <option value="">Select Shift</option>
-            <option value="1">Shift I ( Aided )</option>
-            <option value="2">Shift II ( Self Finance )</option>
-          </select>
-        </div>
-
-        <!-- Password -->
-        <div>
-          <label class="block mb-1 font-medium">Password: </label>
-          <input id="password" type="password" required placeholder="Create password"
-            class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-        </div>
-
-        <!-- Confirm Password -->
-        <div>
-          <label class="block mb-1 font-medium">Confirm Password: </label>
-          <input id="confirmPassword" type="password" required placeholder="Re-enter password"
-            class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-        </div>
-
-        <!-- Terms -->
-        <div class="flex items-center gap-2 text-sm">
-          <input id="terms" type="checkbox" class="w-4 h-4 accent-blue-500">
-          <label for="terms">
-            I agree to the
-            <button type="button" onclick="showTerms()" class="text-blue-400 underline hover:text-blue-300">
-              Terms & Conditions
-            </button>
-          </label>
-        </div>
-        <!-- Submit -->
-        <button type="submit"
-          class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition">
-          Register
-        </button>
-
-      </form>
-      <!-- </div> -->
-      <!-- </section> -->
+    <div class="hero-content bg-white w-full max-w-2xl rounded-2xl shadow-xl p-10 sm:p-14 text-center">
+      <div class="text-6xl mb-6">🚫</div>
+      <h2 class="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">Registrations Closed</h2>
+      <p class="text-slate-500 text-lg mb-6">
+        Thank you for your interest in <span class="font-semibold text-blue-600">AION 2K26</span>!
+      </p>
+      <div class="bg-red-50 border-2 border-red-200 rounded-xl p-6 mb-6">
+        <p class="text-red-700 font-semibold text-lg mb-2">⏰ Registration Deadline Has Passed</p>
+        <p class="text-red-600 text-sm">
+          The registration window closed on <strong>11 February 2026 (Wednesday)</strong>.
+          <br>Spot registrations are <strong>not</strong> accepted.
+        </p>
+      </div>
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6 text-left">
+        <p class="font-semibold text-blue-800 mb-2">📌 Already registered?</p>
+        <ul class="text-blue-700 text-sm space-y-1 list-disc pl-5">
+          <li>Log in to your dashboard to view your team details.</li>
+          <li>Report to the venue on <strong>13 February 2026</strong> by <strong>8:30 AM</strong>.</li>
+          <li>Carry your <strong>College ID</strong> and <strong>Bonafide Certificate</strong>.</li>
+        </ul>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="login.html"
+          class="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold text-lg hover:bg-blue-700 transition shadow-md">
+          Go to Login
+        </a>
+        <a href="/"
+          class="px-8 py-3 bg-slate-200 text-slate-700 rounded-lg font-semibold text-lg hover:bg-slate-300 transition">
+          Back to Home
+        </a>
+      </div>
     </div>
+    
   </section>
 
   <!-- FOOTER -->
@@ -255,71 +190,7 @@
     </div>
   </footer>
 
-  <!-- SCRIPTS -->
-  <script>
-    function showTerms() {
-      Swal.fire({
-        title: 'Terms & Conditions',
-        width: '700px',
-        background: '#020617',
-        color: '#e5e7eb',
-        scrollbarPadding: false,
-        confirmButtonText: 'I Agree',
-        showCancelButton: true,
-        cancelButtonText: 'Close',
-        confirmButtonColor: '#2563eb',
-        cancelButtonColor: '#475569',
-        customClass: {
-          popup: 'rounded-2xl border border-white/10',
-          title: 'text-lg',
-          htmlContainer: 'text-left'
-        },
-        html: `
-      <div class="text-sm leading-relaxed text-slate-300 max-h-[55vh] overflow-y-auto pr-2">
-
-        <p class="font-semibold text-white mb-2">Account & Registration</p>
-        <ul class="list-disc pl-5 space-y-1">
-          <li>Only <b>one student (team leader)</b> should create an account and register for the entire team.</li>
-          <li>Registration is <b>online only</b>. Spot registration is not allowed.</li>
-          <li>Maximum of <b>15 participants per department</b> are allowed.</li>
-          <li>Each participant can register for a maximum of <b>two events</b>.</li>
-          <li>Full Day College or <b>Engineering Students</b> choose <b>Shift 1</b>.</li>
-        </ul>
-
-        <p class="font-semibold text-white mt-4 mb-2">Registration Fee</p>
-        <ul class="list-disc pl-5 space-y-1">
-          <li>Registration fee is <b>₹200 per participant</b>.</li>
-          <li>Payment must be made <b>on the event day (13-02-2026)</b>.</li>
-          <li>Payment modes accepted: <b>Cash or UPI</b>.</li>
-        </ul>
-
-        <p class="font-semibold text-white mt-4 mb-2">Event Day Instructions</p>
-        <ul class="list-disc pl-5 space-y-1">
-          <li>Participants must report by <b>8:30 a.m. sharp</b>.</li>
-          <li>Valid <b>College ID</b> and <b>Bonafide Certificate</b> (signed by HoD/Coordinator) are mandatory.</li>
-          <li>Refreshments and lunch will be provided only to <b>registered participants</b>.</li>
-        </ul>
-
-        <p class="font-semibold text-white mt-4 mb-2">General Rules</p>
-        <ul class="list-disc pl-5 space-y-1">
-          <li>The decision of the judges shall be <b>final</b>.</li>
-          <li>Any misbehavior or rule violation will lead to <b>disqualification</b>.</li>
-          <li>Registration deadline: <b>09-02-2026 (Monday)</b>.</li>
-          <li>For queries, contact the <b>Chairman of the Symposium</b> (details in brochure).</li>
-        </ul>
-
-      </div>
-    `
-      }).then((result) => {
-        if (result.isConfirmed) {
-          document.getElementById('terms').checked = true;
-        }
-      });
-    }
-  </script>
-
   <script src="js/landing.js"></script>
-  <script src="js/registerAPI.js"></script>
 
 </body>
 
